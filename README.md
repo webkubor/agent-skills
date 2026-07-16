@@ -1,5 +1,7 @@
 ![logo](https://cdn.jsdelivr.net/gh/webkubor/picx-images-hosting@master/blog/projects/agent-skills/cs-token4ai-1784193630762882000.png)
 
+![banner](https://cdn.jsdelivr.net/gh/webkubor/picx-images-hosting@master/blog/projects/agent-skills-banner/cs-token4ai-1784205669259527000.png)
+
 <div align="center">
 
 # Agent Skills
