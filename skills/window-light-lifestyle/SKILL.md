@@ -71,7 +71,7 @@ subtle hair flyaways, authentic lighting, and a strong sense of human presence.
 
 ## 参考图
 
-![参考图](sample-output.jpg)
+![参考图](https://img.webkubor.online/skills/window-light-lifestyle/preview/sample-output.jpg)
 
 ---
 

@@ -34,3 +34,10 @@ GPT-Image / 即梦 / Midjourney / Seedream 均可。
 复古自然图鉴配色，3:4竖版。
 禁止：卡通化、过度装饰、与主题无关的元素。
 ```
+
+## 参考图
+
+![默认参考图](https://img.webkubor.online/skills/knowledge-card/preview/ref-default.png)
+
+![出图示例](https://img.webkubor.online/skills/knowledge-card/preview/sample-output.png)
+

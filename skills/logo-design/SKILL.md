@@ -43,3 +43,8 @@ Web3科技公司极简Logo：单一几何形状，70%以上负空间。
 粗均匀线条，像Uniswap/Notion风格。1:1正方形，favicon可辨识。
 禁止：文字、光环、粒子、阴影、多个元素组合、星形。
 ```
+
+## 参考图
+
+![出图示例](https://img.webkubor.online/skills/logo-design/preview/sample-output.png)
+

@@ -34,3 +34,10 @@ GPT-Image / 即梦 / Midjourney / Seedream 均可。
 温暖色调，留白充足，适合加文字标题。
 禁止：商业感过强、棚拍风格、过度修图。
 ```
+
+## 参考图
+
+![默认参考图](https://img.webkubor.online/skills/social-cover/preview/ref-default.png)
+
+![出图示例](https://img.webkubor.online/skills/social-cover/preview/sample-output.png)
+

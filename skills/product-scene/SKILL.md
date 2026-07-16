@@ -22,7 +22,7 @@ category: image-gen
 输入一张产品照片 → 输出该产品在专业商业场景中的效果图。
 
 ## 默认参考图
-`ref-default.jpg` — 木质桌面、侧光、浅景深，产品居中陈列
+[`ref-default.jpg`](https://img.webkubor.online/skills/product-scene/preview/ref-default.jpg) — 木质桌面、侧光、浅景深，产品居中陈列
 
 ## 使用方式
 ```

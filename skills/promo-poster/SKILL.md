@@ -22,7 +22,7 @@ category: image-gen
 生成中文电商促销海报——大胆排版+醒目价格+产品展示。
 
 ## 默认参考图
-`ref-default.jpg` — 霓虹绿+黑色背景、贴纸拼贴风格
+[`ref-default.jpg`](https://img.webkubor.online/skills/promo-poster/preview/ref-default.jpg) — 霓虹绿+黑色背景、贴纸拼贴风格
 
 ## 使用方式
 ```

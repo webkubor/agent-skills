@@ -58,7 +58,7 @@ category: 古装
 
 ## 参考图
 
-![参考图](sample-output.jpg)
+![参考图](https://img.webkubor.online/skills/ancient-tea-room/preview/sample-output.jpg)
 
 ---
 

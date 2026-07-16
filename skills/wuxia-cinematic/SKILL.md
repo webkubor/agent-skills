@@ -151,3 +151,7 @@ C. [类似结构,侧重安静特写和情绪留白]
 ### 违规后处理
 
 帖子被判「诱导互动」→ 点「修改笔记」，删掉引导话术，重新发布（比申诉快）。
+
+## 参考图
+
+![出图示例](https://img.webkubor.online/skills/wuxia-cinematic/preview/sample-output.png)

@@ -33,3 +33,10 @@ GPT-Image / 即梦 / Midjourney / Seedream 均可。
 浅景深(f/1.8)，柔和自然光，高分辨率。1:1 正方形构图。
 禁止：过度锐化、文字叠加、非产品元素。
 ```
+
+## 参考图
+
+![默认参考图](https://img.webkubor.online/skills/product-detail/preview/ref-default.jpg)
+
+![出图示例](https://img.webkubor.online/skills/product-detail/preview/sample-output.png)
+

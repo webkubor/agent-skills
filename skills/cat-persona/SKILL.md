@@ -22,7 +22,7 @@ category: image-gen
 生成真实猫咪+拟人表情的创意图片。
 
 ## 默认参考图
-`ref-default.jpg` — 真实猫脸+拟人表情示例
+`[`ref-default.png`](https://img.webkubor.online/skills/cat-persona/preview/ref-default.png)` — 真实猫脸+拟人表情示例
 
 ## 使用方式
 ```

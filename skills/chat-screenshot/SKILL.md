@@ -39,3 +39,10 @@ GPT-Image / 即梦 / Midjourney / Seedream 均可。
 头像统一，无其他app UI元素。9:16竖版手机截图比例。
 禁止：其他社交媒体界面元素、拼贴、装饰边框。
 ```
+
+## 参考图
+
+![默认参考图](https://img.webkubor.online/skills/chat-screenshot/preview/ref-default.png)
+
+![出图示例](https://img.webkubor.online/skills/chat-screenshot/preview/sample-output.png)
+
