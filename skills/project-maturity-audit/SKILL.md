@@ -36,13 +36,31 @@ description: 项目成熟度体检 — 自动识别项目类型（Skills/前端/
 - 徽章：CI 状态、license、版本号——有没有、是不是活的。
 
 **Logo / Social Preview 检查（必须实际查文件，不只看 API）：**
+
+⚠️ **Logo 和 Social Preview 是两个不同的东西，不能混为一谈。**
+
+| 维度 | Logo | Social Preview |
+|------|------|---------------|
+| **用途** | 网站顶部小图标、npm icon、PyPI badge、GitHub 仓库小图标 | 分享链接到 Twitter/微信/飞书时显示的封面图 |
+| **比例** | 1:1 正方形 | 2:1 横版（1280×640px） |
+| **格式** | SVG（透明背景）> PNG | PNG/JPG |
+| **位置** | README 顶部 `![logo](url)` | GitHub Settings → Social preview，或 README 首张横版图 |
+| **背景** | 透明/半透明 | 可有背景色 |
+
+**Logo 检查：**
 1. 查仓库文件结构：`gh api repos/<r>/contents` 找 logo.* / icon.* / public/logo.* / assets/logo.*
 2. 查 README 是否引用了图片：`gh api repos/<r>/readme --jq '.content' | base64 -d | grep -c '!\['`
 3. 查 public/ 目录：favicon.ico、pwa-*.png、logo.svg
 4. **SSoT 原则**：一个项目只能有一个官方 logo。多个 logo 文件 = 品牌混乱。
-5. **1:1 比例**：logo 必须是正方形（1:1），适配 GitHub 社交预览、npm icon、PyPI badge。
+5. **1:1 比例**：logo 必须是正方形（1:1），SVG 透明背景优先。
 6. **主题色一致**：logo 颜色必须与项目品牌色/主题色统一。
-7. GitHub Social Preview：API 无法检测，需提醒用户去 Settings → General → Social preview 手动上传。
+
+**Social Preview 检查：**
+1. GitHub 会自动从 README 第一张横版图生成 Social Preview。
+2. 如果 README 顶部是 1:1 logo（不是横版图），GitHub 会自动裁剪/缩放，效果可能不理想。
+3. 最佳实践：README 顶部放 1:1 logo（显示用），同时确保仓库里有一张 2:1 横版图（1280×640）作为 Social Preview 源。
+4. `curl -sL "https://github.com/<r>" | grep -o 'og:image.*content="[^"]*"'` 可以检查当前 Social Preview 是否已生效。
+5. Social Preview 图应该包含：项目名 + 一句话定位 + 品牌色背景，横版构图。
 
 **类型特有检查：**
 
@@ -155,5 +173,7 @@ description: 项目成熟度体检 — 自动识别项目类型（Skills/前端/
 - 收录条目过期：awesome 列表里的 homepage 死链。
 - open issue 积压 = "项目已死"错觉，即使代码活跃。
 - **Logo 检查不能只看 API 字段**：必须查仓库文件结构（`public/logo.*`、`assets/logo.*`）和 README 引用。API 的 `social_preview_image` 字段不可靠。
+- **Logo ≠ Social Preview**：Logo 是 1:1 小图标（网站/npm），Social Preview 是 2:1 横版图（1280×640，分享链接用）。两者用途、比例、格式完全不同。
 - **一个项目一个 logo（SSoT）**：多个 logo 文件 = 品牌混乱。
-- **Logo 必须 1:1 正方形**：适配 GitHub 社交预览、npm icon、PyPI badge。
+- **Logo 必须 1:1 正方形，SVG 透明背景优先**：适配 npm icon、PyPI badge、GitHub 仓库图标。
+- **Social Preview 自动从 README 生成**：GitHub 会抓 README 里第一张横版图作为 Social Preview。如果 README 只有 1:1 logo，GitHub 会裁剪，效果可能不理想。最佳实践是同时准备 logo（1:1）和 social preview（2:1）两张图。
