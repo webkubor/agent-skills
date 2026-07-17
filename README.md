@@ -103,6 +103,12 @@ cd agent-skills
 
 Every `export` appends a line to a local `delivery-log.jsonl` (when/what/where/by whom — your delivery ledger, git-ignored). `./skills-cli log` shows it.
 
+Just want one skill, no clone:
+
+```bash
+npx degit webkubor/agent-skills/skills/wuxia-cinematic ~/.claude/skills/wuxia-cinematic
+```
+
 > 📋 **入库规范**：[`docs/SKILL-SPEC.md`](docs/SKILL-SPEC.md) — 目录结构/脱水规则/质量追踪/检查清单，所有 Agent 必读。
 
 Then mount the skills into your runtime — see **[docs/INSTALL.md](./docs/INSTALL.md)** for Claude Code, Codex, Gemini CLI, Cursor and generic harnesses. The short version:

@@ -52,6 +52,12 @@ cd agent-skills
 
 每次 `export` 会在本地 `delivery-log.jsonl` 追加一条交付记录（时间/技能/去向/操作者，已 git-ignore）。`./skills-cli log` 查看。
 
+只要单个技能、不想 clone：
+
+```bash
+npx degit webkubor/agent-skills/skills/wuxia-cinematic ~/.claude/skills/wuxia-cinematic
+```
+
 挂载方式见 **[docs/INSTALL.md](./docs/INSTALL.md)**（Claude Code / Codex / Gemini CLI / Cursor / 通用）。最短路径：
 
 - **Claude Code**：把 skill 文件夹拷进 `~/.claude/skills/`（或项目的 `.claude/skills/`）
