@@ -1,0 +1,198 @@
+#!/usr/bin/env python3
+"""agent-skills CLI — 定向筛选 / 导出挂载 / 入库校验 / 交付台账
+
+零依赖，单文件。仓库根目录执行：
+
+  ./skills-cli list                          # 列出全部技能
+  ./skills-cli list --platform xiaohongshu   # 定向：只看小红书技能
+  ./skills-cli list --category coding --json # 机器可读输出
+
+  ./skills-cli export --platform xiaohongshu --to ~/.claude/skills
+  ./skills-cli export --skills wuxia-cinematic,keyring --to ./out
+  ./skills-cli export --category image-gen --zip xiaohongshu-pack.zip
+
+  ./skills-cli check                         # 入库规范校验（SKILL-SPEC.md 的执行器）
+  ./skills-cli log                           # 查看交付记录（delivery-log.jsonl）
+
+platform 取值: xiaohongshu | wechat | wechat-video | shared（shared=多平台通用）
+定向筛选时 shared 技能默认包含在任何平台结果里（--strict 关闭该行为）。
+"""
+
+import argparse, datetime, getpass, json, os, re, shutil, socket, sys, zipfile
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent
+SKILLS_DIR = ROOT / 'skills'
+LOG_FILE = ROOT / 'delivery-log.jsonl'
+
+REQUIRED_KEYS = ('name', 'description', 'type', 'category', 'platform')
+PLATFORMS = ('xiaohongshu', 'wechat', 'wechat-video', 'shared')
+CATEGORIES = ('image-gen', 'coding', 'video-gen', 'meta')
+
+
+def parse_frontmatter(path: Path) -> dict:
+    text = path.read_text(encoding='utf-8')
+    m = re.match(r'^---\n(.*?)\n---', text, re.S)
+    if not m:
+        return {}
+    fm = {}
+    for line in m.group(1).splitlines():
+        kv = re.match(r'^([A-Za-z_][A-Za-z0-9_-]*):\s*(.*)$', line)
+        if kv:
+            fm[kv.group(1)] = kv.group(2).strip().strip('"')
+    return fm
+
+
+def load_skills() -> list:
+    out = []
+    for d in sorted(SKILLS_DIR.iterdir()):
+        if not d.is_dir():
+            continue
+        f = d / 'SKILL.md'
+        fm = parse_frontmatter(f) if f.exists() else {}
+        out.append({'dir': d.name, 'path': d, 'fm': fm, 'has_skill_md': f.exists()})
+    return out
+
+
+def matches(s, args) -> bool:
+    fm = s['fm']
+    if args.skills:
+        return s['dir'] in {x.strip() for x in args.skills.split(',')}
+    if args.platform:
+        plat = fm.get('platform', '')
+        ok = plat == args.platform or (not args.strict and plat == 'shared')
+        if not ok:
+            return False
+    if args.category and fm.get('category', '') != args.category:
+        return False
+    return True
+
+
+def cmd_list(args):
+    rows = [s for s in load_skills() if matches(s, args)]
+    if args.json:
+        print(json.dumps([
+            {'name': s['dir'], **{k: s['fm'].get(k, '') for k in ('zh_name', 'category', 'platform', 'type', 'description')}}
+            for s in rows], ensure_ascii=False, indent=2))
+        return
+    if not rows:
+        print('无匹配技能'); return
+    w = max(len(s['dir']) for s in rows)
+    for s in rows:
+        fm = s['fm']
+        print(f"{s['dir']:<{w}}  {fm.get('category', '?'):<9} {fm.get('platform', '?'):<12} {fm.get('zh_name', '')}")
+    print(f"\n共 {len(rows)} 个")
+
+
+def cmd_export(args):
+    if not (args.skills or args.platform or args.category):
+        sys.exit('export 需要至少一个筛选条件（--skills / --platform / --category），拒绝全量误导出')
+    rows = [s for s in load_skills() if matches(s, args)]
+    if not rows:
+        sys.exit('无匹配技能，未导出')
+
+    names = [s['dir'] for s in rows]
+    if args.zip:
+        zpath = Path(args.zip).expanduser().resolve()
+        with zipfile.ZipFile(zpath, 'w', zipfile.ZIP_DEFLATED) as z:
+            for s in rows:
+                for f in sorted(s['path'].rglob('*')):
+                    if f.is_file():
+                        z.write(f, f.relative_to(SKILLS_DIR))
+        target = str(zpath)
+    elif args.to:
+        dest = Path(args.to).expanduser().resolve()
+        dest.mkdir(parents=True, exist_ok=True)
+        for s in rows:
+            shutil.copytree(s['path'], dest / s['dir'], dirs_exist_ok=True)
+        target = str(dest)
+    else:
+        sys.exit('export 需要 --to <目录> 或 --zip <文件>')
+
+    entry = {
+        'ts': datetime.datetime.now().astimezone().isoformat(timespec='seconds'),
+        'action': 'export',
+        'skills': names,
+        'target': target,
+        'filter': {k: v for k, v in (('platform', args.platform), ('category', args.category), ('skills', args.skills)) if v},
+        'by': f'{getpass.getuser()}@{socket.gethostname()}',
+    }
+    if not args.no_log:
+        with LOG_FILE.open('a', encoding='utf-8') as fp:
+            fp.write(json.dumps(entry, ensure_ascii=False) + '\n')
+    print(f"✅ 导出 {len(names)} 个技能 → {target}")
+    for n in names:
+        print('  ·', n)
+    if not args.no_log:
+        print(f"📒 已记录交付台账 {LOG_FILE.name}")
+
+
+def cmd_check(args):
+    fails, warns = [], []
+    for s in load_skills():
+        tag = s['dir']
+        if not s['has_skill_md']:
+            fails.append(f'{tag}: 缺 SKILL.md（规范要求唯一入口）'); continue
+        fm = s['fm']
+        for k in REQUIRED_KEYS:
+            if not fm.get(k):
+                fails.append(f'{tag}: frontmatter 缺 {k}')
+        if fm.get('name') and fm['name'] != tag:
+            fails.append(f"{tag}: name 字段({fm['name']}) 与目录名不一致")
+        if fm.get('platform') and fm['platform'] not in PLATFORMS:
+            fails.append(f"{tag}: platform 值非法({fm['platform']})，应为 {'|'.join(PLATFORMS)}")
+        if fm.get('category') and fm['category'] not in CATEGORIES:
+            fails.append(f"{tag}: category 值非法({fm['category']})，应为 {'|'.join(CATEGORIES)}")
+        if fm.get('category') == 'image-gen':
+            if not any((s['path'] / f'sample-output{ext}').exists() for ext in ('.jpg', '.png', '.jpeg', '.webp')):
+                warns.append(f'{tag}: 缺 sample-output 样图（规范要求出图类至少 1 张）')
+
+    for f in fails:
+        print('❌', f)
+    for w in warns:
+        print('⚠️ ', w)
+    total = len(load_skills())
+    print(f'\n{total} 个技能：{total - len({f.split(":")[0] for f in fails})} 通过，{len(fails)} 项硬伤，{len(warns)} 项警告')
+    sys.exit(1 if fails else 0)
+
+
+def cmd_log(args):
+    if not LOG_FILE.exists():
+        print('暂无交付记录'); return
+    lines = LOG_FILE.read_text(encoding='utf-8').strip().splitlines()
+    for line in lines[-args.tail:]:
+        e = json.loads(line)
+        print(f"{e['ts']}  {e['by']}  {len(e['skills'])} 个技能 → {e['target']}")
+        print('   ', ', '.join(e['skills']))
+
+
+def main():
+    ap = argparse.ArgumentParser(prog='skills-cli', description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    sub = ap.add_subparsers(dest='cmd', required=True)
+
+    def add_filters(p):
+        p.add_argument('--platform', choices=PLATFORMS)
+        p.add_argument('--category', choices=CATEGORIES)
+        p.add_argument('--skills', help='逗号分隔的技能名（精确指定，忽略其他筛选）')
+        p.add_argument('--strict', action='store_true', help='平台筛选时不自动包含 shared 技能')
+
+    p = sub.add_parser('list', help='列出/筛选技能'); add_filters(p)
+    p.add_argument('--json', action='store_true'); p.set_defaults(fn=cmd_list)
+
+    p = sub.add_parser('export', help='定向导出到目录或 zip，并记录交付台账'); add_filters(p)
+    p.add_argument('--to', help='目标目录（如 ~/.claude/skills）')
+    p.add_argument('--zip', help='打包为 zip 文件')
+    p.add_argument('--no-log', action='store_true', help='本次不写交付台账')
+    p.set_defaults(fn=cmd_export)
+
+    p = sub.add_parser('check', help='入库规范校验（SKILL-SPEC 执行器）'); p.set_defaults(fn=cmd_check)
+
+    p = sub.add_parser('log', help='查看交付台账')
+    p.add_argument('--tail', type=int, default=20); p.set_defaults(fn=cmd_log)
+
+    args = ap.parse_args()
+    args.fn(args)
+
+
+if __name__ == '__main__':
+    main()

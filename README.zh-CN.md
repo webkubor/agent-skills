@@ -35,7 +35,22 @@ Agent 缺的不是智力，是**流程**：怎么亲眼验收一次 UI 改动、
 
 ```bash
 git clone https://github.com/webkubor/agent-skills.git
+cd agent-skills
+
+# 浏览与筛选（每个技能的 frontmatter 都声明了 category + platform）
+./skills-cli list
+./skills-cli list --platform xiaohongshu        # 定向：小红书可用技能（含通用）
+./skills-cli list --category coding --json      # 机器可读
+
+# 定向导出 — 直接挂载进你的 Agent 运行时
+./skills-cli export --platform xiaohongshu --to ~/.claude/skills
+./skills-cli export --skills wuxia-cinematic,browser-verify --zip pack.zip
+
+# 按 docs/SKILL-SPEC.md 校验整库
+./skills-cli check
 ```
+
+每次 `export` 会在本地 `delivery-log.jsonl` 追加一条交付记录（时间/技能/去向/操作者，已 git-ignore）。`./skills-cli log` 查看。
 
 挂载方式见 **[docs/INSTALL.md](./docs/INSTALL.md)**（Claude Code / Codex / Gemini CLI / Cursor / 通用）。最短路径：
 

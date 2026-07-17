@@ -1,6 +1,9 @@
 ---
 name: browser-verify
 description: Use when you need to control a real browser or visually verify rendered UI (screenshot, read on-screen values, click, check light/dark/mobile, diagnose blank/empty pages). Built on browser-harness (CDP), works cross-agent. Use for any UI visual DoD / "看渲染 / 截图验证 / 浏览器控制".
+type: procedure
+category: coding
+platform: shared
 ---
 # ── 质量追踪 ──
 {

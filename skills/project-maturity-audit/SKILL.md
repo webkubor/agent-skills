@@ -1,6 +1,9 @@
 ---
 name: project-maturity-audit
 description: 项目成熟度体检 — 自动识别项目类型（Skills/前端/CLI/后端/库/组件），按类型差异化标准从门面、分发、发布工程、质量护栏、社区卫生、文档、安全、度量八个维度做证据化评估打分，输出记分卡和整改清单。触发词：项目体检、成熟度评估、为什么没 star、开源检查、maturity audit、审查我的项目/仓库。可传仓库路径或 GitHub 仓库名作为参数；不传则审查当前目录。
+type: procedure
+category: coding
+platform: shared
 ---
 
 # 项目成熟度体检 (Project Maturity Audit)

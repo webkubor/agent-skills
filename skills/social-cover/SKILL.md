@@ -14,6 +14,8 @@ category: image-gen
     {"date": "2026-07-16", "usage": "收录 agent-skills", "result": "✅ 已有样图"}
   ]
 }
+type: style-base
+platform: shared
 ---
 
 # 社交媒体封面

@@ -1,6 +1,9 @@
 ---
 name: git-worktrees
 description: Use whenever a code task (new feature, bug fix, refactor, experiment) begins, or when invoked via the /git-worktrees command — by default develop in an isolated git worktree (fix/… for fixes, feature/… for features), then merge to test/main and auto-clean on completion. 涉及任何代码变动时默认在隔离 git worktree 中开发（fix/ 或 feature/ 分支），完成后合并到 test/main 并自动清理。
+type: procedure
+category: coding
+platform: shared
 ---
 # ── 质量追踪 ──
 {

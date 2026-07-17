@@ -15,6 +15,7 @@ category: image-gen
     {"date": "2026-07-16", "usage": "收录 agent-skills", "result": "✅ 已有样图"}
   ]
 }
+platform: shared
 ---
 
 # 东方武侠电影感(Wuxia Cinematic)

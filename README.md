@@ -1,7 +1,3 @@
-![logo](https://cdn.jsdelivr.net/gh/webkubor/picx-images-hosting@master/blog/projects/agent-skills/cs-token4ai-1784193630762882000.png)
-
-![banner](https://cdn.jsdelivr.net/gh/webkubor/picx-images-hosting@master/blog/projects/agent-skills-banner/cs-token4ai-1784205669259527000.png)
-
 <div align="center">
 
 # Agent Skills
@@ -12,7 +8,7 @@ English | **[简体中文](./README.zh-CN.md)**
 
 Not prompt snippets. Not one tool's config format. Each skill is a self-contained capability document — battle-tested in real production work — that any agent able to read markdown instructions can mount: Claude Code, Codex, Gemini CLI, Cursor, or your own harness.
 
-| [![skills](https://img.shields.io/badge/skills-43-6366f1)](./skills)
+| [![skills](https://img.shields.io/badge/skills-20-6366f1)](./skills)
 [![format](https://img.shields.io/badge/format-SKILL.md-10b981)](https://agentskills.io)
 [![license](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
 
@@ -86,16 +82,26 @@ Each skill is a self-contained visual style. Pick one, copy its prompt keywords,
 | [**new-chinese**](./skills/female-portrait-routes/oriental/new-chinese.md) | 新中式 |
 | [**ultra-close-real-face**](./skills/female-portrait-routes/realism/ultra-close-real-face.md) | 超近真实面部 |
 
-### Video generation skills
-
-| Skill | What it generates |
-|---|---|
-
 ## Quick start
 
 ```bash
 git clone https://github.com/webkubor/agent-skills.git
+cd agent-skills
+
+# Browse & filter (every skill declares category + platform in frontmatter)
+./skills-cli list
+./skills-cli list --platform xiaohongshu        # targeted: XHS-ready skills (incl. shared)
+./skills-cli list --category coding --json      # machine-readable
+
+# Targeted export — mount straight into your agent runtime
+./skills-cli export --platform xiaohongshu --to ~/.claude/skills
+./skills-cli export --skills wuxia-cinematic,browser-verify --zip pack.zip
+
+# Validate the library against docs/SKILL-SPEC.md
+./skills-cli check
 ```
+
+Every `export` appends a line to a local `delivery-log.jsonl` (when/what/where/by whom — your delivery ledger, git-ignored). `./skills-cli log` shows it.
 
 > 📋 **入库规范**：[`docs/SKILL-SPEC.md`](docs/SKILL-SPEC.md) — 目录结构/脱水规则/质量追踪/检查清单，所有 Agent 必读。
 

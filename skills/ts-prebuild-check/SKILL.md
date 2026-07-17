@@ -1,6 +1,9 @@
 ---
 name: ts-prebuild-check
 description: Use when setting up or running pre-commit / pre-build validation for a TypeScript project — the checks an agent must run before git commit (typecheck + lint + format + diff-only design-token check). 框架无关、零外部依赖；TypeScript 项目提交前验证流程。
+type: procedure
+category: coding
+platform: shared
 ---
 # ── 质量追踪 ──
 {

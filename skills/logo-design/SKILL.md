@@ -16,6 +16,8 @@ trace:
   - date: 2026-07-15
     usage: 收录 agent-skills
     result: ✅
+type: style-base
+platform: shared
 ---
 
 # Logo 设计
