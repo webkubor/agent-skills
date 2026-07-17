@@ -8,7 +8,7 @@ English | **[简体中文](./README.zh-CN.md)**
 
 Not prompt snippets. Not one tool's config format. Each skill is a self-contained capability document — battle-tested in real production work — that any agent able to read markdown instructions can mount: Claude Code, Codex, Gemini CLI, Cursor, or your own harness.
 
-| [![skills](https://img.shields.io/badge/skills-20-6366f1)](./skills)
+| [![skills](https://img.shields.io/badge/skills-21-6366f1)](./skills)
 [![format](https://img.shields.io/badge/format-SKILL.md-10b981)](https://agentskills.io)
 [![license](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
 
@@ -34,6 +34,7 @@ Design principles:
 | [**browser-verify**](./skills/browser-verify) | Visual definition-of-done: drive Chrome via CDP, screenshot, read values, click, check light/dark/mobile | [`browser-harness`](https://www.npmjs.com/package/browser-harness) |
 | [**clone-website**](./skills/clone-website) | Reverse-engineer and rebuild websites, dispatching parallel builder agents in isolated worktrees | — |
 | [**project-maturity-audit**](./skills/project-maturity-audit) | 8-dimension evidence-based repo audit: scorecard + ROI-sorted fixes | — |
+| [**github-launch-kit**](./skills/github-launch-kit) | Turn a repository into an evidence-backed launch kit: positioning, real-demo plan, video script, README copy, and platform-specific posts | — |
 | [**git-worktrees**](./skills/git-worktrees) | Isolated-worktree development discipline: every task gets its own branch, auto-clean | — |
 | [**ts-prebuild-check**](./skills/ts-prebuild-check) | Diff-only pre-commit validation for TypeScript: typecheck + lint changed files only | — |
 

@@ -34,7 +34,7 @@ Add the skill path to your rules file (e.g. `.cursor/rules/`) with an instructio
 
 ## Generic harness
 
-A skill is: **frontmatter** (`name`, `description` = routing signal) + **body** (procedure: triggers, steps, evidence requirements, hard constraints). Feed the description to your router; inject the body into context when routed. Nothing else is required.
+A skill is: **frontmatter** (`name`, `description` = routing signal) + **body** (procedure: triggers, steps, evidence requirements, hard constraints). Repository-specific fields such as `type`, `category`, and `platform` may be nested under `metadata` for compatibility with the Agent Skills format; `skills-cli` also accepts the repository's legacy top-level form. Feed the description to your router; inject the body into context when routed. Nothing else is required.
 
 ## Companion tools some skills expect
 
