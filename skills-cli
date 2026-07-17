@@ -36,10 +36,20 @@ def parse_frontmatter(path: Path) -> dict:
     if not m:
         return {}
     fm = {}
+    in_metadata = False
     for line in m.group(1).splitlines():
+        nested = re.match(r'^\s{2}([A-Za-z_][A-Za-z0-9_-]*):\s*(.*)$', line)
+        if in_metadata and nested:
+            fm[nested.group(1)] = nested.group(2).strip().strip('"')
+            continue
         kv = re.match(r'^([A-Za-z_][A-Za-z0-9_-]*):\s*(.*)$', line)
         if kv:
-            fm[kv.group(1)] = kv.group(2).strip().strip('"')
+            key, value = kv.group(1), kv.group(2).strip().strip('"')
+            in_metadata = key == 'metadata' and not value
+            if key != 'metadata':
+                fm[key] = value
+        elif line.strip():
+            in_metadata = False
     return fm
 
 
