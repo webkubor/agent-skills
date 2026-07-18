@@ -5,6 +5,7 @@ description: 产品微距特写——材质纹理、logo特写、局部功能展
 ratio: "1:1"
 category: image-gen
 genre: 品牌商品
+ref_required: true
 # ── 质量追踪 ──
 {
   "status": "tested",
