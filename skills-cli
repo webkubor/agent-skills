@@ -156,6 +156,12 @@ def cmd_check(args):
         if fm.get('category') == 'image-gen':
             if not any((s['path'] / f'sample-output{ext}').exists() for ext in ('.jpg', '.png', '.jpeg', '.webp')):
                 warns.append(f'{tag}: 缺 sample-output 样图（规范要求出图类至少 1 张）')
+            # 出图类 = 纯提示词模板，禁止出现系统命令行（cs/wrangler/npx 等对用户无意义）
+            import re as _re
+            body = (s['path'] / 'SKILL.md').read_text(encoding='utf-8')
+            hits = sorted(set(_re.findall(r'\bcs\s+(?:image|db|secrets|task|board)\b|\bwrangler\s+\w+|\bnpx\s+[\w-]+', body)))
+            if hits:
+                fails.append(f"{tag}: 出图类技能禁止包含系统命令行（发现: {', '.join(hits[:3])}）——纯提示词模板即可")
 
     for f in fails:
         print('❌', f)
