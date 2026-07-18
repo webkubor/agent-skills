@@ -6,6 +6,7 @@ type: style-base
 platform: xiaohongshu
 ratio: "3:4"
 category: image-gen
+genre: 人像写真
 style: 古装
 ---
 

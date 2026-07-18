@@ -4,6 +4,7 @@ zh_name: 产品细节图
 description: 产品微距特写——材质纹理、logo特写、局部功能展示
 ratio: "1:1"
 category: image-gen
+genre: 品牌商品
 # ── 质量追踪 ──
 {
   "status": "tested",

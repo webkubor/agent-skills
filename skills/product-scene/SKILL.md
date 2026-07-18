@@ -4,6 +4,7 @@ zh_name: 商品场景图
 description: 把任意产品图放入专业商业场景——木质桌面、自然光、场景化陈列
 ratio: "3:4"
 category: image-gen
+genre: 品牌商品
 # ── 质量追踪 ──
 {
   "status": "tested",

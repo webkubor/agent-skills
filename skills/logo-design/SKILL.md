@@ -4,6 +4,7 @@ zh_name: Logo 设计
 description: Web3/科技公司 Logo——单一几何形、70%负空间、粉紫渐变
 ratio: "1:1"
 category: image-gen
+genre: 品牌商品
 # ── 质量追踪 ──
 status: tested
 rating: ★★★★☆

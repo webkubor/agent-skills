@@ -4,6 +4,7 @@ zh_name: 微信聊天截图
 description: 纯微信聊天界面截图——对话气泡+红包+统一头像
 ratio: "9:16"
 category: image-gen
+genre: 图文卡片
 # ── 质量追踪 ──
 {
   "status": "tested",

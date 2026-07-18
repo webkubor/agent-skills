@@ -4,6 +4,7 @@ zh_name: 女性人像路线
 description: 20 female portrait style routes (beauty / cinematic / commercial / curve / fantasy / fashion / lifestyle / oriental / realism) — pick a route file, follow its fixed style core plus variable parameters to generate. 20 条女性人像风格路线，选一条路线文件按"固定风格核心+可变参数"出图。
 type: style-base
 category: image-gen
+genre: 人像写真
 platform: xiaohongshu
 ratio: "3:4"
 ---

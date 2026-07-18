@@ -4,6 +4,7 @@ zh_name: 科普图鉴
 description: 知识科普卡片——品种图鉴、科学插画风格
 ratio: "3:4"
 category: image-gen
+genre: 图文卡片
 # ── 质量追踪 ──
 {
   "status": "tested",

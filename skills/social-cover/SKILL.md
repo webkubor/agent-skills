@@ -4,6 +4,7 @@ zh_name: 社交媒体封面
 description: 小红书/朋友圈封面——生活方式美学、柔和滤镜
 ratio: "3:4"
 category: image-gen
+genre: 海报封面
 # ── 质量追踪 ──
 {
   "status": "tested",

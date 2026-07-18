@@ -4,6 +4,7 @@ zh_name: 猫咪拟人
 description: 真实猫咪+拟人表情——猫脸保留真实纹理，叠加人类表情
 ratio: "3:4"
 category: image-gen
+genre: 角色风格
 # ── 质量追踪 ──
 {
   "status": "tested",

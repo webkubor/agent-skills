@@ -6,6 +6,7 @@ type: style-base
 ratio: "3:4"
 description: 参考人像出图基础SKILL — 锁定人物身份，仅换场景/服装/风格。换装、换场景、换事情，都走这个。
 category: image-gen
+genre: 角色风格
 ---
 # ── 质量追踪 ──
 {

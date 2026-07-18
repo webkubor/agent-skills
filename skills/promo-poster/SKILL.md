@@ -4,6 +4,7 @@ zh_name: 促销海报
 description: 电商促销海报——大胆字体、霓虹配色、贴纸拼贴风
 ratio: "3:4"
 category: image-gen
+genre: 海报封面
 # ── 质量追踪 ──
 {
   "status": "tested",
