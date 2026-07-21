@@ -57,6 +57,8 @@ Each skill is a self-contained visual style. Pick one, copy its prompt keywords,
 | [**knowledge-card**](./skills/knowledge-card) | 科普图鉴/知识卡片 |
 | [**cat-persona**](./skills/cat-persona) | 猫咪拟人角色 |
 | [**chat-screenshot**](./skills/chat-screenshot) | 微信聊天截图 |
+| [**article-cover**](./skills/article-cover) | 公众号封面 — 金句海报 · 暗色高级感 |
+| [**article-illust**](./skills/article-illust) | 公众号文内配图 — 意境插图 · 金句集成 |
 
 #### Female portrait routes（20 条人像路线）
 

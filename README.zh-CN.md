@@ -32,6 +32,26 @@ Agent 缺的不是智力，是**流程**：怎么亲眼验收一次 UI 改动、
 | [**git-worktrees**](./skills/git-worktrees) | 隔离 worktree 开发纪律：每个任务独立 worktree 和分支，完成自动合并清理 | — |
 | [**ts-prebuild-check**](./skills/ts-prebuild-check) | TS 项目 diff-only 提交前校验：只检查改动文件，零额外依赖，存量债务不阻塞 | — |
 
+### 图像生成技能
+
+| Skill | 出图类型 |
+|---|---|
+| [**article-cover**](./skills/article-cover) | 公众号封面 — 金句海报 · 暗色高级感 |
+| [**article-illust**](./skills/article-illust) | 公众号文内配图 — 意境插图 · 金句集成 |
+| [**wuxia-cinematic**](./skills/wuxia-cinematic) | 东方武侠电影感 |
+| [**social-cover**](./skills/social-cover) | 通用封面 — 生活方式 |
+| [**promo-poster**](./skills/promo-poster) | 促销海报 |
+| [**knowledge-card**](./skills/knowledge-card) | 科普图鉴/知识卡片 |
+| [**character-consistency**](./skills/character-consistency) | 人物一致性换装 |
+| [**logo-design**](./skills/logo-design) | Logo 设计 |
+| [**product-detail**](./skills/product-detail) | 产品详情图 |
+| [**product-scene**](./skills/product-scene) | 产品场景图 |
+| [**ancient-tea-room**](./skills/ancient-tea-room) | 古风茶室人像 |
+| [**golden-hour-car-selfie**](./skills/golden-hour-car-selfie) | 黄金时刻车内自拍 |
+| [**window-light-lifestyle**](./skills/window-light-lifestyle) | 窗边光生活方式 |
+| [**cat-persona**](./skills/cat-persona) | 猫咪拟人角色 |
+| [**chat-screenshot**](./skills/chat-screenshot) | 微信聊天截图 |
+
 ## 快速开始
 
 ```bash
