@@ -8,9 +8,11 @@ English | **[简体中文](./README.zh-CN.md)**
 
 Not prompt snippets. Not one tool's config format. Each skill is a self-contained capability document — battle-tested in real production work — that any agent able to read markdown instructions can mount: Claude Code, Codex, Gemini CLI, Cursor, or your own harness.
 
-| [![skills](https://img.shields.io/badge/skills-21-6366f1)](./skills)
+| [![skills](https://img.shields.io/badge/skills-26-6366f1)](./skills)
+[![check](https://img.shields.io/badge/check-passing-10b981)](https://github.com/webkubor/agent-skills/actions)
 [![format](https://img.shields.io/badge/format-SKILL.md-10b981)](https://agentskills.io)
 [![license](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
+[![contributions](https://img.shields.io/badge/contributions-welcome-blue)](./CONTRIBUTING.md)
 
 </div>
 

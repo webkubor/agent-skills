@@ -1,0 +1,23 @@
+name: Validate Skills
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'skills/**'
+      - 'skills-cli'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'skills/**'
+      - 'skills-cli'
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run skills-cli check
+        run: |
+          chmod +x ./skills-cli
+          ./skills-cli check

@@ -1,0 +1,18 @@
+---
+name: Skill Proposal
+about: 提议新增一个 skill
+title: '[Skill] '
+labels: enhancement
+assignees: webkubor
+---
+
+**Skill 名称**
+
+**一句话描述**（含风格关键词）
+
+**适用平台**
+<!-- xiaohongshu / wechat / wechat-video / shared -->
+
+**参考图描述**（如果没有现成图，用文字描述预期效果）
+
+**使用场景**

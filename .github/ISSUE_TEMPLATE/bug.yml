@@ -1,0 +1,23 @@
+---
+name: Bug Report
+about: 报告 skill 或 CLI 的问题
+title: '[Bug] '
+labels: bug
+assignees: webkubor
+---
+
+**哪个 skill / 命令？**
+<!-- 如 article-cover / skills-cli list -->
+
+**预期行为**
+
+**实际行为**
+
+**复现步骤**
+1.
+2.
+3.
+
+**环境**
+- OS:
+- skills-cli 版本: <!-- 或 commit hash -->
