@@ -8,7 +8,7 @@ English | **[简体中文](./README.zh-CN.md)**
 
 Not prompt snippets. Not one tool's config format. Each skill is a self-contained capability document — battle-tested in real production work — that any agent able to read markdown instructions can mount: Claude Code, Codex, Gemini CLI, Cursor, or your own harness.
 
-| [![skills](https://img.shields.io/badge/skills-43-6366f1)](./skills)
+| [![skills](https://img.shields.io/badge/skills-21-6366f1)](./skills)
 [![format](https://img.shields.io/badge/format-SKILL.md-10b981)](https://agentskills.io)
 [![license](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
 
@@ -34,6 +34,7 @@ Design principles:
 | [**browser-verify**](./skills/browser-verify) | Visual definition-of-done: drive Chrome via CDP, screenshot, read values, click, check light/dark/mobile | [`browser-harness`](https://www.npmjs.com/package/browser-harness) |
 | [**clone-website**](./skills/clone-website) | Reverse-engineer and rebuild websites, dispatching parallel builder agents in isolated worktrees | — |
 | [**project-maturity-audit**](./skills/project-maturity-audit) | 8-dimension evidence-based repo audit: scorecard + ROI-sorted fixes | — |
+| [**github-launch-kit**](./skills/github-launch-kit) | Turn a repository into an evidence-backed launch kit: positioning, real-demo plan, video script, README copy, and platform-specific posts | — |
 | [**git-worktrees**](./skills/git-worktrees) | Isolated-worktree development discipline: every task gets its own branch, auto-clean | — |
 | [**ts-prebuild-check**](./skills/ts-prebuild-check) | Diff-only pre-commit validation for TypeScript: typecheck + lint changed files only | — |
 
@@ -82,15 +83,31 @@ Each skill is a self-contained visual style. Pick one, copy its prompt keywords,
 | [**new-chinese**](./skills/female-portrait-routes/oriental/new-chinese.md) | 新中式 |
 | [**ultra-close-real-face**](./skills/female-portrait-routes/realism/ultra-close-real-face.md) | 超近真实面部 |
 
-### Video generation skills
-
-| Skill | What it generates |
-|---|---|
-
 ## Quick start
 
 ```bash
 git clone https://github.com/webkubor/agent-skills.git
+cd agent-skills
+
+# Browse & filter (every skill declares category + platform in frontmatter)
+./skills-cli list
+./skills-cli list --platform xiaohongshu        # targeted: XHS-ready skills (incl. shared)
+./skills-cli list --category coding --json      # machine-readable
+
+# Targeted export — mount straight into your agent runtime
+./skills-cli export --platform xiaohongshu --to ~/.claude/skills
+./skills-cli export --skills wuxia-cinematic,browser-verify --zip pack.zip
+
+# Validate the library against docs/SKILL-SPEC.md
+./skills-cli check
+```
+
+Every `export` appends a line to a local `delivery-log.jsonl` (when/what/where/by whom — your delivery ledger, git-ignored). `./skills-cli log` shows it.
+
+Just want one skill, no clone:
+
+```bash
+npx degit webkubor/agent-skills/skills/wuxia-cinematic ~/.claude/skills/wuxia-cinematic
 ```
 
 > 📋 **入库规范**：[`docs/SKILL-SPEC.md`](docs/SKILL-SPEC.md) — 目录结构/脱水规则/质量追踪/检查清单，所有 Agent 必读。

@@ -4,6 +4,7 @@ zh_name: 社交媒体封面
 description: 小红书/朋友圈封面——生活方式美学、柔和滤镜
 ratio: "3:4"
 category: image-gen
+genre: 海报封面
 # ── 质量追踪 ──
 {
   "status": "tested",
@@ -14,6 +15,8 @@ category: image-gen
     {"date": "2026-07-16", "usage": "收录 agent-skills", "result": "✅ 已有样图"}
   ]
 }
+type: style-base
+platform: shared
 ---
 
 # 社交媒体封面
@@ -34,3 +37,10 @@ GPT-Image / 即梦 / Midjourney / Seedream 均可。
 温暖色调，留白充足，适合加文字标题。
 禁止：商业感过强、棚拍风格、过度修图。
 ```
+
+## 参考图
+
+![默认参考图](https://img.webkubor.online/skills/social-cover/preview/ref-default.png)
+
+![出图示例](https://img.webkubor.online/skills/social-cover/preview/sample-output.png)
+

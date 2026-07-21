@@ -4,6 +4,7 @@ zh_name: Logo 设计
 description: Web3/科技公司 Logo——单一几何形、70%负空间、粉紫渐变
 ratio: "1:1"
 category: image-gen
+genre: 品牌商品
 # ── 质量追踪 ──
 status: tested
 rating: ★★★★☆
@@ -16,6 +17,8 @@ trace:
   - date: 2026-07-15
     usage: 收录 agent-skills
     result: ✅
+type: style-base
+platform: shared
 ---
 
 # Logo 设计
@@ -43,3 +46,8 @@ Web3科技公司极简Logo：单一几何形状，70%以上负空间。
 粗均匀线条，像Uniswap/Notion风格。1:1正方形，favicon可辨识。
 禁止：文字、光环、粒子、阴影、多个元素组合、星形。
 ```
+
+## 参考图
+
+![出图示例](https://img.webkubor.online/skills/logo-design/preview/sample-output.png)
+

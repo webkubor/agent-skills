@@ -4,6 +4,8 @@ zh_name: 产品细节图
 description: 产品微距特写——材质纹理、logo特写、局部功能展示
 ratio: "1:1"
 category: image-gen
+genre: 品牌商品
+ref_required: true
 # ── 质量追踪 ──
 {
   "status": "tested",
@@ -14,6 +16,8 @@ category: image-gen
     {"date": "2026-07-16", "usage": "收录 agent-skills", "result": "✅ 已有样图"}
   ]
 }
+type: style-base
+platform: shared
 ---
 
 # 产品细节图
@@ -33,3 +37,10 @@ GPT-Image / 即梦 / Midjourney / Seedream 均可。
 浅景深(f/1.8)，柔和自然光，高分辨率。1:1 正方形构图。
 禁止：过度锐化、文字叠加、非产品元素。
 ```
+
+## 参考图
+
+![默认参考图](https://img.webkubor.online/skills/product-detail/preview/ref-default.jpg)
+
+![出图示例](https://img.webkubor.online/skills/product-detail/preview/sample-output.png)
+

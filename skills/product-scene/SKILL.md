@@ -4,6 +4,8 @@ zh_name: 商品场景图
 description: 把任意产品图放入专业商业场景——木质桌面、自然光、场景化陈列
 ratio: "3:4"
 category: image-gen
+genre: 品牌商品
+ref_required: true
 # ── 质量追踪 ──
 {
   "status": "tested",
@@ -14,6 +16,8 @@ category: image-gen
     {"date": "2026-07-16", "usage": "收录 agent-skills", "result": "✅ 已有样图"}
   ]
 }
+type: style-base
+platform: shared
 ---
 
 # 商品场景图
@@ -22,7 +26,7 @@ category: image-gen
 输入一张产品照片 → 输出该产品在专业商业场景中的效果图。
 
 ## 默认参考图
-`ref-default.jpg` — 木质桌面、侧光、浅景深，产品居中陈列
+[`ref-default.jpg`](https://img.webkubor.online/skills/product-scene/preview/ref-default.jpg) — 木质桌面、侧光、浅景深，产品居中陈列
 
 ## 使用方式
 ```

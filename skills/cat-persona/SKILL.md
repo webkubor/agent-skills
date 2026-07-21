@@ -4,6 +4,7 @@ zh_name: 猫咪拟人
 description: 真实猫咪+拟人表情——猫脸保留真实纹理，叠加人类表情
 ratio: "3:4"
 category: image-gen
+genre: 角色风格
 # ── 质量追踪 ──
 {
   "status": "tested",
@@ -14,6 +15,8 @@ category: image-gen
     {"date": "2026-07-16", "usage": "收录 agent-skills", "result": "✅ 已有样图"}
   ]
 }
+type: style-base
+platform: xiaohongshu
 ---
 
 # 猫咪拟人
@@ -22,7 +25,7 @@ category: image-gen
 生成真实猫咪+拟人表情的创意图片。
 
 ## 默认参考图
-`ref-default.jpg` — 真实猫脸+拟人表情示例
+`[`ref-default.png`](https://img.webkubor.online/skills/cat-persona/preview/ref-default.png)` — 真实猫脸+拟人表情示例
 
 ## 使用方式
 ```

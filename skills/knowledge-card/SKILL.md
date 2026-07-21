@@ -4,6 +4,7 @@ zh_name: 科普图鉴
 description: 知识科普卡片——品种图鉴、科学插画风格
 ratio: "3:4"
 category: image-gen
+genre: 图文卡片
 # ── 质量追踪 ──
 {
   "status": "tested",
@@ -14,6 +15,8 @@ category: image-gen
     {"date": "2026-07-16", "usage": "收录 agent-skills", "result": "✅ 已有样图"}
   ]
 }
+type: style-base
+platform: shared
 ---
 
 # 科普图鉴
@@ -34,3 +37,10 @@ GPT-Image / 即梦 / Midjourney / Seedream 均可。
 复古自然图鉴配色，3:4竖版。
 禁止：卡通化、过度装饰、与主题无关的元素。
 ```
+
+## 参考图
+
+![默认参考图](https://img.webkubor.online/skills/knowledge-card/preview/ref-default.png)
+
+![出图示例](https://img.webkubor.online/skills/knowledge-card/preview/sample-output.png)
+

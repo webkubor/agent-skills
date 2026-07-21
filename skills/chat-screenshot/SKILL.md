@@ -4,6 +4,7 @@ zh_name: 微信聊天截图
 description: 纯微信聊天界面截图——对话气泡+红包+统一头像
 ratio: "9:16"
 category: image-gen
+genre: 图文卡片
 # ── 质量追踪 ──
 {
   "status": "tested",
@@ -14,6 +15,8 @@ category: image-gen
     {"date": "2026-07-16", "usage": "收录 agent-skills", "result": "✅ 已有样图"}
   ]
 }
+type: style-base
+platform: shared
 ---
 
 # 微信聊天截图
@@ -39,3 +42,10 @@ GPT-Image / 即梦 / Midjourney / Seedream 均可。
 头像统一，无其他app UI元素。9:16竖版手机截图比例。
 禁止：其他社交媒体界面元素、拼贴、装饰边框。
 ```
+
+## 参考图
+
+![默认参考图](https://img.webkubor.online/skills/chat-screenshot/preview/ref-default.png)
+
+![出图示例](https://img.webkubor.online/skills/chat-screenshot/preview/sample-output.png)
+
