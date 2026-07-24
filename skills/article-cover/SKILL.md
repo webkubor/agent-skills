@@ -66,4 +66,4 @@ photorealistic, minimalist, museum quality, negative space, cinematic
 
 ## 参考图
 
-![参考图](sample-output.jpg)
+![参考图](https://img.webkubor.online/skills/article-cover/preview/sample-output.jpg)
