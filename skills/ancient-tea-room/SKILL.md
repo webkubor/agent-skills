@@ -103,6 +103,3 @@ style: 古装
 
 ---
 
-<!-- tracking
-{"status":"tested","rating":"★★★★★","last_used":"2026-07-15","total_uses":1,"trace":[{"date":"2026-07-15","usage":"用户提供完整 prompt+参考图，抽离为风格核心+可变参数结构","result":"✅ 已脱水入库"},{"date":"2026-07-16","usage":"新增小红书合规发布规范 — 基于诱导互动违规实案","result":"✅ 已更新"}]}
--->

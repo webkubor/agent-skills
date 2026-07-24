@@ -30,7 +30,6 @@ platform: xiaohongshu
 ## 使用方式
 ```
 把下方 Prompt 模板（连同参考图）发给任意出图模型：
-GPT-Image / 即梦 / Midjourney / Seedream 均可。
 ```
 
 ## Prompt 模板

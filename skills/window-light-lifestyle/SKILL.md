@@ -77,6 +77,3 @@ subtle hair flyaways, authentic lighting, and a strong sense of human presence.
 
 ---
 
-<!-- tracking
-{"status":"tested","rating":"★★★★★","last_used":"2026-07-15","total_uses":1,"trace":[{"date":"2026-07-15","usage":"用户提供GPT-Image-2优化 prompt+参考图，脱水入库","result":"✅ 首个GPT-Image-2专属SKILL"}]}
--->

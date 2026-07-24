@@ -61,6 +61,3 @@ DSLR人像，棚拍，人工轮廓光，夸张浅景深，电影级调色，重�
 
 ---
 
-<!-- tracking
-{"status":"tested","rating":"★★★★★","last_used":"2026-07-15","total_uses":1,"trace":[{"date":"2026-07-15","usage":"用户提供完整 prompt+参考图，脱水入库","result":"✅ 现代类第一个投产SKILL"}]}
--->

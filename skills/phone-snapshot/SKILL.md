@@ -70,7 +70,7 @@ Background slightly blurred with natural depth of field.
 Warm natural colors, slight noise and grain like a real phone photo.
 Casual imperfect composition, not professionally framed.
 Authentic everyday snapshot aesthetic, not staged, not DSLR.
---ar 3:4
+aspect ratio 3:4
 ```
 
 ### 示例
@@ -85,11 +85,5 @@ Background slightly blurred with natural depth of field.
 Warm natural colors, slight noise and grain like a real phone photo.
 Casual imperfect composition, not professionally framed.
 Authentic everyday snapshot aesthetic, not staged, not DSLR.
---ar 3:4
+aspect ratio 3:4
 ```
-
----
-
-<!-- tracking
-{"status":"draft","rating":"","last_used":"","total_uses":0,"trace":[]}
--->

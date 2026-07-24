@@ -78,7 +78,3 @@ photorealistic, minimalist, museum quality, negative space, cinematic
 ## 参考图
 
 ![参考图](sample-output.jpg)
-
-<!-- tracking
-{"status":"tested","rating":"★★★★☆","last_used":"2026-07-21","total_uses":1,"trace":[{"date":"2026-07-21","usage":"公众号《会用AI了，然后呢？》文内配图-过程再漂亮没有落地的结果","result":"✅ 3张金句配图，风格统一，做好阅读断点"}]}
--->

@@ -64,14 +64,6 @@ photorealistic, minimalist, museum quality, negative space, cinematic
 
 **金句选取规则**：文章最锋利的一句，7-14 字，有独立传播力。看完封面就想点开。
 
-## 出图管线
-
-Studio 中台 → token4ai-upstream-1 → gpt-image-2 → R2 CDN
-
 ## 参考图
 
 ![参考图](sample-output.jpg)
-
-<!-- tracking
-{"status":"tested","rating":"★★★★☆","last_used":"2026-07-21","total_uses":1,"trace":[{"date":"2026-07-21","usage":"公众号《会用AI了，然后呢？》封面-被玩的人关不掉","result":"✅ 暗室蓝光+金句排版一体，海报感强"}]}
--->
