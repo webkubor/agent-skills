@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""agent-skills CLI — 定向筛选 / 导出挂载 / 入库校验 / 交付台账 / 漂移检测
+"""agent-skills CLI — 定向筛选 / 导出挂载 / 入库校验 / 使用记录 / 交付台账 / 漂移检测
 
 零依赖，单文件。仓库根目录执行：
 
@@ -13,7 +13,9 @@
   ./skills-cli export --skills browser-verify --to .claude/skills,.codex/skills   # 一次导出多个目标
   ./skills-cli export --skills browser-verify --to ~/.claude/skills --tool claude # 套用 claude 专属 overlay
 
-  ./skills-cli check                         # 入库规范校验（SKILL-SPEC.md 的执行器）
+  ./skills-cli check                         # 入库规范校验（SKILL-SPEC.md 的执行器），含质量追踪 JSON 校验
+  ./skills-cli check --skills wuxia-cinematic # 只查指定技能（pre-commit hook 用这个做 diff-only 校验）
+  ./skills-cli stats                         # 使用记录总览：按 last_used 排序，标出缺记录的技能
   ./skills-cli drift --to ~/.claude/skills   # 对比 已安装副本 vs 仓库源 vs 交付基线，抓漂移/冲突
   ./skills-cli log                           # 查看交付记录（delivery-log.jsonl）
 
@@ -143,6 +145,51 @@ def whoami() -> str:
     return f'{getpass.getuser()}@{socket.gethostname()}'
 
 
+def extract_tracking(text: str):
+    """从正文提取质量追踪 JSON。兼容两种写法：<!-- tracking {...} --> 或裸 JSON 块。"""
+    m = re.search(r'<!--\s*tracking\s*(\{.*?\})\s*-->', text, re.S)
+    if m:
+        return m.group(1)
+    for m in re.finditer(r'\{(?:[^{}]|\{[^{}]*\})*\}', text, re.S):
+        blob = m.group(0)
+        if '"status"' in blob and '"trace"' in blob:
+            return blob
+    return None
+
+
+TRACKING_KEYS = ('status', 'rating', 'last_used', 'total_uses', 'trace')
+TRACKING_STATUS = ('draft', 'tested', 'production')
+
+
+def check_tracking(tag: str, body: str, fails: list, warns: list):
+    blob = extract_tracking(body)
+    if blob is None:
+        warns.append(f'{tag}: 缺质量追踪 JSON（建议记录 status/rating/last_used/total_uses/trace，见 SKILL-SPEC.md）')
+        return
+    try:
+        data = json.loads(blob)
+    except json.JSONDecodeError as e:
+        fails.append(f'{tag}: 质量追踪 JSON 格式错误（{e}）')
+        return
+    missing = [k for k in TRACKING_KEYS if k not in data]
+    if missing:
+        fails.append(f"{tag}: 质量追踪 JSON 缺字段 {', '.join(missing)}")
+        return
+    issues = []
+    if data.get('status') not in TRACKING_STATUS:
+        issues.append(f"status={data.get('status')!r} 应为 {'/'.join(TRACKING_STATUS)}")
+    if not re.fullmatch(r'[★☆]{5}', str(data.get('rating', ''))):
+        issues.append(f"rating={data.get('rating')!r} 格式非法")
+    if not re.fullmatch(r'\d{4}-\d{2}-\d{2}', str(data.get('last_used', ''))):
+        issues.append(f"last_used={data.get('last_used')!r} 非 YYYY-MM-DD")
+    if not isinstance(data.get('total_uses'), int):
+        issues.append(f"total_uses={data.get('total_uses')!r} 非整数")
+    if not isinstance(data.get('trace'), list) or not data['trace']:
+        issues.append('trace 为空或非数组')
+    if issues:
+        warns.append(f"{tag}: 质量追踪 JSON 内容可疑 — {'; '.join(issues)}（如实填写，非占位符）")
+
+
 def load_skills() -> list:
     out = []
     for d in sorted(SKILLS_DIR.iterdir()):
@@ -237,7 +284,10 @@ def cmd_export(args):
 
 def cmd_check(args):
     fails, warns = [], []
-    for s in load_skills():
+    all_skills = load_skills()
+    scoped = bool(args.skills or args.platform or args.category)
+    rows = [s for s in all_skills if matches(s, args)] if scoped else all_skills
+    for s in rows:
         tag = s['dir']
         if not s['has_skill_md']:
             fails.append(f'{tag}: 缺 SKILL.md（规范要求唯一入口）'); continue
@@ -251,13 +301,18 @@ def cmd_check(args):
             fails.append(f"{tag}: platform 值非法({fm['platform']})，应为 {'|'.join(PLATFORMS)}")
         if fm.get('category') and fm['category'] not in CATEGORIES:
             fails.append(f"{tag}: category 值非法({fm['category']})，应为 {'|'.join(CATEGORIES)}")
+
+        body = (s['path'] / 'SKILL.md').read_text(encoding='utf-8')
+        check_tracking(tag, body, fails, warns)
+
+        if fm.get('category') == 'coding' and not fm.get('version'):
+            warns.append(f'{tag}: coding 类技能建议声明 version 字段（追踪版本迭代）')
+
         if fm.get('category') == 'image-gen':
             if not any((s['path'] / f'sample-output{ext}').exists() for ext in ('.jpg', '.png', '.jpeg', '.webp')):
                 warns.append(f'{tag}: 缺 sample-output 样图（规范要求出图类至少 1 张）')
             # 出图类 = 纯提示词模板，禁止出现系统命令行（cs/wrangler/npx 等对用户无意义）
-            import re as _re
-            body = (s['path'] / 'SKILL.md').read_text(encoding='utf-8')
-            hits = sorted(set(_re.findall(r'\bcs\s+(?:image|db|secrets|task|board)\b|\bwrangler\s+\w+|\bnpx\s+[\w-]+', body)))
+            hits = sorted(set(re.findall(r'\bcs\s+(?:image|db|secrets|task|board)\b|\bwrangler\s+\w+|\bnpx\s+[\w-]+', body)))
             if hits:
                 fails.append(f"{tag}: 出图类技能禁止包含系统命令行（发现: {', '.join(hits[:3])}）——纯提示词模板即可")
 
@@ -265,9 +320,43 @@ def cmd_check(args):
         print('❌', f)
     for w in warns:
         print('⚠️ ', w)
-    total = len(load_skills())
+    total = len(rows)
     print(f'\n{total} 个技能：{total - len({f.split(":")[0] for f in fails})} 通过，{len(fails)} 项硬伤，{len(warns)} 项警告')
     sys.exit(1 if fails else 0)
+
+
+def cmd_stats(args):
+    """使用记录总览：按 last_used 由旧到新排序，缺质量追踪块的排最前面（最该补）。"""
+    rows = [s for s in load_skills() if s['has_skill_md'] and matches(s, args)]
+    parsed = []
+    for s in rows:
+        body = (s['path'] / 'SKILL.md').read_text(encoding='utf-8')
+        blob = extract_tracking(body)
+        data = None
+        if blob:
+            try:
+                data = json.loads(blob)
+            except json.JSONDecodeError:
+                data = None
+        parsed.append((s['dir'], data))
+
+    parsed.sort(key=lambda x: (x[1] or {}).get('last_used') or '')
+
+    if args.json:
+        print(json.dumps([
+            {'name': name, 'status': (d or {}).get('status'), 'rating': (d or {}).get('rating'),
+             'last_used': (d or {}).get('last_used'), 'total_uses': (d or {}).get('total_uses')}
+            for name, d in parsed], ensure_ascii=False, indent=2))
+        return
+
+    missing = [name for name, d in parsed if d is None]
+    w = max((len(n) for n, _ in parsed), default=0)
+    for name, d in parsed:
+        if d is None:
+            print(f'{name:<{w}}  ⬜ 无质量追踪记录')
+        else:
+            print(f"{name:<{w}}  {d.get('status', '?'):<10} {d.get('rating', '?'):<6} last_used={d.get('last_used', '?'):<11} uses={d.get('total_uses', '?')}")
+    print(f'\n共 {len(parsed)} 个，{len(missing)} 个缺使用记录')
 
 
 def cmd_drift(args):
@@ -370,7 +459,11 @@ def main():
     p.add_argument('--no-log', action='store_true', help='本次不写交付台账')
     p.set_defaults(fn=cmd_export)
 
-    p = sub.add_parser('check', help='入库规范校验（SKILL-SPEC 执行器）'); p.set_defaults(fn=cmd_check)
+    p = sub.add_parser('check', help='入库规范校验（SKILL-SPEC 执行器），含质量追踪 JSON 校验'); add_filters(p)
+    p.set_defaults(fn=cmd_check)
+
+    p = sub.add_parser('stats', help='使用记录总览：按 last_used 排序，标出缺质量追踪的技能'); add_filters(p)
+    p.add_argument('--json', action='store_true'); p.set_defaults(fn=cmd_stats)
 
     p = sub.add_parser('drift', help='对比已安装副本 vs 仓库源 vs 交付基线，检测漂移/冲突'); add_filters(p)
     p.add_argument('--to', help='已安装目录，逗号分隔可一次检查多个（必填）')

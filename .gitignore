@@ -1,5 +1,7 @@
 delivery-log.jsonl
 .worktrees/
+.wrangler/
+__pycache__/
 
 # 参考图/样图不入库：agent-skills 只放技能定义（SKILL.md 及配套 .md）。
 # 图片真源在 R2（img.webkubor.online），由 studio 后台 UI / sync-skills「上传即删」管理。

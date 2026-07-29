@@ -1,0 +1,10 @@
+#!/bin/sh
+# 提交前内容审核：只校验本次提交实际改动的技能（diff-only），
+# 不会因为仓库里已有的历史欠账挡住跟这些技能无关的提交。
+# 启用（一次性，本地生效）：git config core.hooksPath .githooks
+
+skills=$(git diff --cached --name-only -- 'skills/*' | sed -n 's#^skills/\([^/]*\)/.*#\1#p' | sort -u | paste -sd, -)
+
+if [ -n "$skills" ]; then
+    ./skills-cli check --skills "$skills" || { echo "❌ skills-cli check 未通过（$skills），提交已阻止（如需跳过用 git commit --no-verify）"; exit 1; }
+fi

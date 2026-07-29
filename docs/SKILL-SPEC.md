@@ -38,6 +38,19 @@ category: 古装               # 古装 | 现代
 ---
 ```
 
+上面这张表是 `image-gen` 类的字段。`coding` 类技能（过程性文档，不出图）用更轻的一套，`sample-output.jpg` 也不适用：
+
+```yaml
+---
+name: skill-name
+description: 一句话描述 + 触发场景
+type: procedure
+category: coding
+platform: shared               # coding 类基本都是 shared，不针对某个内容平台
+version: 0.1.0                 # 推荐但非强制；程序性技能会迭代，建个语义化版本号方便追溯
+---
+```
+
 ### 正文结构（必须）
 
 ```markdown
@@ -63,13 +76,20 @@ category: 古装               # 古装 | 现代
 
 ### 质量追踪（必须）
 
-正文末尾 HTML 注释：
+frontmatter 结束后，正文最前面放一段裸 JSON（不用 HTML 注释包裹——仓库里 18 个已入库技能全部这么写，`skills-cli check` 也是照这个格式解析的）：
 
-```html
-<!-- tracking
+```markdown
+---
+name: skill-name
+...
+---
+# ── 质量追踪 ──
 {"status":"tested","rating":"★★★★★","last_used":"YYYY-MM-DD","total_uses":N,"trace":[...]}
--->
+
+# 正式标题
 ```
+
+`<!-- tracking {...} --> ` 的 HTML 注释写法仍然兼容（`skills-cli check` 两种都认），但新技能一律用上面的裸 JSON 写法。
 
 | 字段 | 值 | 说明 |
 |------|-----|------|

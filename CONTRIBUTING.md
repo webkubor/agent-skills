@@ -8,6 +8,9 @@
 git clone https://github.com/webkubor/agent-skills.git
 cd agent-skills
 ./skills-cli check  # 确保当前所有 skill 通过校验
+
+# 可选：本地提交前自动跑 diff-only 校验（只查本次改动的技能，不会被仓库历史欠账挡住）
+git config core.hooksPath .githooks
 ```
 
 ## 贡献方式
@@ -42,4 +45,6 @@ cd agent-skills
 
 - `sample-output.jpg` 必须是该 skill 真实出图结果，不用概念图
 - SKILL.md 必须包含完整的「固定风格核心」「可变参数」「负面约束」「使用方式」
-- 质量追踪 comment 必须如实填写（status/rating/last_used）
+- 质量追踪 JSON 必须如实填写（status/rating/last_used/total_uses/trace）——`skills-cli check` 会校验它存不存在、格式对不对、字段值是不是占位符
+- `category: coding` 的技能建议带 `version:` 字段，方便追踪这个技能本身的迭代（`skills-cli check` 会提醒，非强制）
+- 想看全库的使用记录新鲜度（哪些技能好久没用/没记录），跑 `./skills-cli stats`

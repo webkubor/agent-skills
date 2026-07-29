@@ -69,14 +69,20 @@ cd agent-skills
 ./skills-cli export --skills browser-verify --to .claude/skills,.codex/skills      # 一次导出，多个目标
 ./skills-cli export --skills browser-verify --to ~/.claude/skills --tool claude    # 套用该技能的 claude 专属 overlay 字段
 
-# 按 docs/SKILL-SPEC.md 校验整库
+# 按 docs/SKILL-SPEC.md 校验整库（也会校验每个技能的质量追踪 JSON 语法/内容是否可信）
 ./skills-cli check
+./skills-cli check --skills wuxia-cinematic     # diff-only：只查你改动的技能
+
+# 使用记录总览 — 按 last_used 排序，标出完全没记录的技能
+./skills-cli stats
 
 # 漂移检测 — 对比 已安装副本 vs 仓库源 vs 上次交付基线，抓本地手改/仓库过期/冲突
 ./skills-cli drift --to ~/.claude/skills
 ```
 
 每次 `export` 会在本地 `delivery-log.jsonl` 追加一条交付记录（时间/技能/去向/操作者，已 git-ignore）。`./skills-cli log` 查看；`./skills-cli drift` 用它作基线，区分「安装副本被手改过」还是「只是落后于仓库」。
+
+想让 `./skills-cli check` 在每次提交涉及 `skills/` 时自动跑（diff-only，不会被仓库里跟这次改动无关的历史欠账挡住）？执行 `git config core.hooksPath .githooks` 启用内置 hook。
 
 技能 frontmatter 可以声明一个可选的嵌套 `overlays:` 块——按目标工具覆盖的字段（比如仅 Claude 需要的 `model:`），只有 export 时传了 `--tool <name>` 才会套用；不传 `--tool` 时该块会从导出副本里整段剥离，不会泄漏给不认识它的运行时。
 

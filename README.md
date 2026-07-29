@@ -104,8 +104,12 @@ cd agent-skills
 ./skills-cli export --skills browser-verify --to .claude/skills,.codex/skills      # one export, several destinations
 ./skills-cli export --skills browser-verify --to ~/.claude/skills --tool claude    # apply that skill's claude-only overlay fields
 
-# Validate the library against docs/SKILL-SPEC.md
+# Validate the library against docs/SKILL-SPEC.md — also checks each skill's quality-tracking JSON for syntax/plausibility
 ./skills-cli check
+./skills-cli check --skills wuxia-cinematic     # diff-only: check just the skills you touched
+
+# Usage-record overview — sorted by last_used, flags skills with no tracking data at all
+./skills-cli stats
 
 # Drift check — compare an installed copy vs. this repo vs. the last export, catch local edits / stale copies / conflicts
 ./skills-cli drift --to ~/.claude/skills
@@ -114,6 +118,8 @@ cd agent-skills
 Every `export` appends a line to a local `delivery-log.jsonl` (when/what/where/by whom — your delivery ledger, git-ignored). `./skills-cli log` shows it; `./skills-cli drift` uses it as the baseline to tell a hand-edited installed copy apart from one that's just behind the repo.
 
 A skill's frontmatter may declare an optional nested `overlays:` block — per-tool field overrides (e.g. a Claude-only `model:`) that only apply when you pass `--tool <name>` on export. Without `--tool`, the block is stripped from the exported copy so it never leaks into a runtime that doesn't understand it.
+
+Want `./skills-cli check` to run automatically before every commit that touches `skills/` (diff-only, so it never blocks on unrelated pre-existing issues elsewhere in the repo)? `git config core.hooksPath .githooks` enables the bundled hook.
 
 Just want one skill, no clone:
 

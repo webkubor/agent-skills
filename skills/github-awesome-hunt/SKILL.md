@@ -2,6 +2,9 @@
 name: github-awesome-hunt
 description: GitHub 项目检索工具集 — 5 种搜索模式翻找优质开源项目
 version: 1.0.0
+type: procedure
+category: coding
+platform: shared
 triggers:
   - 找项目
   - GitHub搜索
