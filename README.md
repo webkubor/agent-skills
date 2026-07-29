@@ -97,6 +97,7 @@ cd agent-skills
 ./skills-cli list
 ./skills-cli list --platform xiaohongshu        # targeted: XHS-ready skills (incl. shared)
 ./skills-cli list --category coding --json      # machine-readable
+./skills-cli search deploy                      # fuzzy keyword search over name/zh_name/description/body
 
 # Targeted export — mount straight into your agent runtime
 ./skills-cli export --platform xiaohongshu --to ~/.claude/skills

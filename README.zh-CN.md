@@ -62,6 +62,7 @@ cd agent-skills
 ./skills-cli list
 ./skills-cli list --platform xiaohongshu        # 定向：小红书可用技能（含通用）
 ./skills-cli list --category coding --json      # 机器可读
+./skills-cli search 部署                         # 关键词模糊搜（name/zh_name/description/正文全文）
 
 # 定向导出 — 直接挂载进你的 Agent 运行时
 ./skills-cli export --platform xiaohongshu --to ~/.claude/skills

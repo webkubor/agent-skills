@@ -6,6 +6,8 @@
   ./skills-cli list                          # 列出全部技能
   ./skills-cli list --platform xiaohongshu   # 定向：只看小红书技能
   ./skills-cli list --category coding --json # 机器可读输出
+  ./skills-cli search 部署                    # 关键词模糊搜（name/zh_name/description/正文全文）
+  ./skills-cli search browser --category coding # 关键词 + 筛选条件组合
 
   ./skills-cli export --platform xiaohongshu --to ~/.claude/skills
   ./skills-cli export --skills wuxia-cinematic,keyring --to ./out
@@ -213,6 +215,33 @@ def matches(s, args) -> bool:
     if args.category and fm.get('category', '') != args.category:
         return False
     return True
+
+
+def cmd_search(args):
+    """关键词模糊搜索：name/zh_name/description/正文全文，不区分大小写。"""
+    kw = args.keyword.lower()
+    rows = []
+    for s in load_skills():
+        if not (s['has_skill_md'] and matches(s, args)):
+            continue
+        fm = s['fm']
+        haystack = ' '.join([s['dir'], fm.get('zh_name', ''), fm.get('description', ''),
+                              (s['path'] / 'SKILL.md').read_text(encoding='utf-8')]).lower()
+        if kw in haystack:
+            rows.append(s)
+
+    if args.json:
+        print(json.dumps([
+            {'name': s['dir'], **{k: s['fm'].get(k, '') for k in ('zh_name', 'category', 'platform', 'type', 'description')}}
+            for s in rows], ensure_ascii=False, indent=2))
+        return
+    if not rows:
+        print(f'没找到匹配 "{args.keyword}" 的技能'); return
+    w = max(len(s['dir']) for s in rows)
+    for s in rows:
+        fm = s['fm']
+        print(f"{s['dir']:<{w}}  {fm.get('category', '?'):<9} {fm.get('platform', '?'):<12} {fm.get('zh_name', '')}")
+    print(f'\n共 {len(rows)} 个匹配 "{args.keyword}"')
 
 
 def cmd_list(args):
@@ -453,6 +482,10 @@ def main():
 
     p = sub.add_parser('list', help='列出/筛选技能'); add_filters(p)
     p.add_argument('--json', action='store_true'); p.set_defaults(fn=cmd_list)
+
+    p = sub.add_parser('search', help='关键词模糊搜索 name/zh_name/description/正文全文'); add_filters(p)
+    p.add_argument('keyword', help='搜索关键词（不区分大小写，子串匹配）')
+    p.add_argument('--json', action='store_true'); p.set_defaults(fn=cmd_search)
 
     p = sub.add_parser('export', help='定向导出到目录或 zip，并记录交付台账'); add_filters(p)
     p.add_argument('--to', help='目标目录，逗号分隔可一次导出多个（如 ~/.claude/skills,.codex/skills）')
