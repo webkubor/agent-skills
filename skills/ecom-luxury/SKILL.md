@@ -3,6 +3,8 @@ name: ecom-luxury
 zh_name: 轻奢氛围大片
 description: 高端品牌氛围感——暗调金属质感、大理石纹理、深色光影、极简构图。适用于珠宝/腕表/香水/高端护肤/奢侈品配饰。
 ratio: "2:3"
+type: style-base
+platform: shared
 category: image-gen
 ---
 

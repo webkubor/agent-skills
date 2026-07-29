@@ -3,6 +3,7 @@ name: y2k-flash-triptych
 zh_name: Y2K 千禧直闪三联自拍
 platform: xiaohongshu
 type: style-base
+category: image-gen
 ratio: "9:16"
 description: 2000s 数码相机直闪质感三联拼图 — 同一人物三格不同角度，CCD复古颗粒，白色细分隔线
 engine: Token4AI (gpt-image-2)
@@ -138,7 +139,7 @@ NOT childlike, NO text, NO watermark, NO date, NO borders.
 
 1. **发参考人像** → SCULPT 逆向提取 `{{FACE_ANCHOR}}`
 2. **替换模板** → 将面部描述填入 `{{FACE_ANCHOR}}`
-3. **出图** → `cs image gen --prompt "$(cat 完整prompt)" --ratio 9:16`
+3. **出图** → 把拼好的完整 prompt 提交给图像生成工具，画幅 9:16
 4. **验证** → 检查三张脸是否一致、Y2K 质感是否到位
 
 ---

@@ -3,6 +3,8 @@ name: ecom-before-after
 zh_name: 前后对比图
 description: 使用前 vs 使用后对比——左右分屏，清晰展示产品效果差异。适用于护肤/美白/清洁/健身/家电等需要效果证明的品类。
 ratio: "1:1"
+type: style-base
+platform: shared
 category: image-gen
 ---
 

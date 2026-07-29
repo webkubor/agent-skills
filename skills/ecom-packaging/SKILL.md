@@ -3,6 +3,8 @@ name: ecom-packaging
 zh_name: 包装与开箱
 description: 产品包装展示——礼盒质感、开箱瞬间、包装细节。适用于品牌升级、送礼场景、开箱测评。强调材质感和仪式感。
 ratio: "1:1"
+type: style-base
+platform: shared
 category: image-gen
 ---
 

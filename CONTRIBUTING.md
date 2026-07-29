@@ -34,6 +34,15 @@ git config core.hooksPath .githooks
 
 `skills-cli` 是单文件 Python 脚本，修改后请确保向后兼容。
 
+### 从别处（CortexOS / 其它私有技能库）移植 Skill
+
+同一个技能名如果在两个地方各存一份、没人记录谁是谁的 fork，早晚会各自演化到认不出彼此——这是真实踩过的坑，不是假设。移植时当场做两件事：
+
+1. **加一行 `origin:` frontmatter**，写清楚来自哪、哪天挪过来的（例：`origin: 移植自 CortexOS skills/xxx，2026-07-29`）
+2. **当场决定这份要不要跟源头保持同步**，并把决定写下来（同一行 origin 里说清楚即可）：
+   - 内容完全一致、以后也不打算独立演化 → 让 agent-skills 做 canonical source，源头那边改成 symlink 指过来，不留两份实体文件
+   - 会针对这里的场景重写/裁剪 → 说明"已改写，不再同步"；如果改写后的东西已经不是原来那个技能了，**换个名字**，不要同名不同源——这条是从 CortexOS 自己的 SKILLS-REGISTRY.md 抄来的规矩，同样适用这里
+
 ## PR 规范
 
 - **一个 PR 只做一件事**：一个 skill / 一个 bugfix / 一个功能

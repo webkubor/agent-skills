@@ -309,8 +309,10 @@ def cmd_check(args):
             warns.append(f'{tag}: coding 类技能建议声明 version 字段（追踪版本迭代）')
 
         if fm.get('category') == 'image-gen':
-            if not any((s['path'] / f'sample-output{ext}').exists() for ext in ('.jpg', '.png', '.jpeg', '.webp')):
-                warns.append(f'{tag}: 缺 sample-output 样图（规范要求出图类至少 1 张）')
+            has_local = any((s['path'] / f'sample-output{ext}').exists() for ext in ('.jpg', '.png', '.jpeg', '.webp'))
+            has_remote = bool(re.search(r'\]\(https?://\S+\.(?:jpe?g|png|webp|gif)\)', body, re.I))
+            if not (has_local or has_remote):
+                warns.append(f'{tag}: 缺样图（本地 sample-output.* 或正文里指向 R2 的图片链接，二选一）')
             # 出图类 = 纯提示词模板，禁止出现系统命令行（cs/wrangler/npx 等对用户无意义）
             hits = sorted(set(re.findall(r'\bcs\s+(?:image|db|secrets|task|board)\b|\bwrangler\s+\w+|\bnpx\s+[\w-]+', body)))
             if hits:

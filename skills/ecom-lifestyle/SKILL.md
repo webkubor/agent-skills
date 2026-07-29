@@ -3,6 +3,8 @@ name: ecom-lifestyle
 zh_name: 电商场景生活图
 description: 把产品放入真实使用场景——自然光、真实环境、正在使用中。适用于Amazon/淘宝场景主图、社交媒体种草、生活方式品牌视觉。产品占比20-25%，氛围优先。
 ratio: "1:1"
+type: style-base
+platform: shared
 category: image-gen
 ---
 

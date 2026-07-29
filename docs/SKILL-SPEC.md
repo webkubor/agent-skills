@@ -14,13 +14,14 @@ type: meta
 ```
 skills/<skill-name>/
 ├── SKILL.md           # 唯一入口（必须）
-├── sample-output.jpg  # 参考样图（必须，至少1张）
+├── sample-output.jpg  # 本地样图（可选，开发期用，不会被提交）
 └── ref/               # 额外参考图（可选，不放仓库）
 ```
 
 - 目录名 = `name` 字段，全小写英文，连字符分隔
-- `sample-output.jpg` 固定文件名，作为目录内唯一展示图
-- 图片格式：jpg（优先）或 png，单张 ≤ 2MB
+- 图片真源在 R2（`img.webkubor.online`），仓库 `.gitignore` 排除了所有 `skills/**/*.jpg|png|...`——本地放 `sample-output.jpg` 只是开发期方便预览，**永远不会进 git**
+- 所以「有没有样图」这条规范实际要求的是：正文里有一条指向 R2 的图片链接，例如 `![参考图](https://img.webkubor.online/skills/<name>/preview/xxx.jpg)`。本地文件只是可选的开发期辅助，不能替代这条链接
+- `skills-cli check` 两者都认：本地文件存在，或正文含指向图片 URL 的链接，满足其一即可
 
 ## SKILL.md 格式
 

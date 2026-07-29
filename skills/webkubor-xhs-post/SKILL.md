@@ -3,6 +3,7 @@ name: webkubor-xhs-post
 zh_name: webkubor 小红书技术文案 QA
 platform: xiaohongshu
 type: content
+category: meta
 description: webkubor 小红书号技术文案质量门槛——选题立意/逻辑严密/词语精准/歧义检测/立意收束，发布前逐项通过
 ---
 

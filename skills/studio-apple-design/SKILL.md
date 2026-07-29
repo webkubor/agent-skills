@@ -1,11 +1,12 @@
 ---
-name: apple-design
-description: Apple-inspired interface design for responsive feedback, fluid motion, translucent materials, typography, accessibility, and interaction quality. Use when designing or reviewing web UI, navigation, drawers, previews, task progress, drag/swipe interactions, or polished motion.
+name: studio-apple-design
+description: Apple-inspired interface design adapted for Studio's dark, warm-toned brand system — responsive feedback, fluid motion, translucent materials, typography, accessibility. Use when designing or reviewing Studio's web UI, navigation, drawers, previews, task progress, drag/swipe interactions, or polished motion.
 argument-hint: "<page-or-component>"
 user-invocable: true
 type: procedure
 category: coding
 platform: shared
+origin: 最初改写自 CortexOS skills/apple-design（该 skill 同步自 https://github.com/emilkowalski/skills）；这是 Studio 专属改写版，硬编码了 Studio 的配色体系，跟 CortexOS 那份已完全分叉，不再同步
 ---
 
 # Apple Design × Studio 暗色主题

@@ -6,6 +6,7 @@ user-invocable: true
 type: procedure
 category: coding
 platform: shared
+origin: 本仓库是这份技能的 canonical source；CortexOS（skills/software-development/clone-website）通过 symlink 引用这个文件，不再维护独立副本
 ---
 # ── 质量追踪 ──
 {

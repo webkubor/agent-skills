@@ -3,6 +3,8 @@ name: ecom-multi-product
 zh_name: 多品组合图
 description: 多款产品/套装/色系组合展示——统一排列、色系协调、套装搭配。适用于SKU展示、节日礼盒、系列产品、穿搭组合。
 ratio: "16:9"
+type: style-base
+platform: shared
 category: image-gen
 ---
 

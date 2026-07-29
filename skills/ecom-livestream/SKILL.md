@@ -3,6 +3,8 @@ name: ecom-livestream
 zh_name: 直播间截图
 description: 模拟抖音/淘宝直播间真实截图——手持产品展示、弹幕飘过、点赞特效、限时标签。适用于直播预告封面、直播切片、带货素材。
 ratio: "3:4"
+type: style-base
+platform: shared
 category: image-gen
 ---
 

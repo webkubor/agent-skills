@@ -3,6 +3,8 @@ name: ecom-social-ugc
 zh_name: 社媒UGC种草图
 description: 小红书/抖音/IG风格——发帖截图、开箱实拍、对镜自拍、晒单体验。强调真实感、手机拍照质感、不加滤镜的自然风格。
 ratio: "3:4"
+type: style-base
+platform: shared
 category: image-gen
 ---
 

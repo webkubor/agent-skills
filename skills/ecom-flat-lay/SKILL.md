@@ -3,6 +3,8 @@ name: ecom-flat-lay
 zh_name: 平铺摆拍
 description: 90°正上方俯拍，产品+搭配道具平铺在纯色/纹理背景上。适用于服装平铺、美妆摆拍、配饰集合、开箱陈列。干净利落的高级质感。
 ratio: "1:1"
+type: style-base
+platform: shared
 category: image-gen
 ---
 
