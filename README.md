@@ -101,12 +101,19 @@ cd agent-skills
 # Targeted export — mount straight into your agent runtime
 ./skills-cli export --platform xiaohongshu --to ~/.claude/skills
 ./skills-cli export --skills wuxia-cinematic,browser-verify --zip pack.zip
+./skills-cli export --skills browser-verify --to .claude/skills,.codex/skills      # one export, several destinations
+./skills-cli export --skills browser-verify --to ~/.claude/skills --tool claude    # apply that skill's claude-only overlay fields
 
 # Validate the library against docs/SKILL-SPEC.md
 ./skills-cli check
+
+# Drift check — compare an installed copy vs. this repo vs. the last export, catch local edits / stale copies / conflicts
+./skills-cli drift --to ~/.claude/skills
 ```
 
-Every `export` appends a line to a local `delivery-log.jsonl` (when/what/where/by whom — your delivery ledger, git-ignored). `./skills-cli log` shows it.
+Every `export` appends a line to a local `delivery-log.jsonl` (when/what/where/by whom — your delivery ledger, git-ignored). `./skills-cli log` shows it; `./skills-cli drift` uses it as the baseline to tell a hand-edited installed copy apart from one that's just behind the repo.
+
+A skill's frontmatter may declare an optional nested `overlays:` block — per-tool field overrides (e.g. a Claude-only `model:`) that only apply when you pass `--tool <name>` on export. Without `--tool`, the block is stripped from the exported copy so it never leaks into a runtime that doesn't understand it.
 
 Just want one skill, no clone:
 

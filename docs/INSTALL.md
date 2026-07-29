@@ -36,6 +36,22 @@ Add the skill path to your rules file (e.g. `.cursor/rules/`) with an instructio
 
 A skill is: **frontmatter** (`name`, `description` = routing signal) + **body** (procedure: triggers, steps, evidence requirements, hard constraints). Repository-specific fields such as `type`, `category`, and `platform` may be nested under `metadata` for compatibility with the Agent Skills format; `skills-cli` also accepts the repository's legacy top-level form. Feed the description to your router; inject the body into context when routed. Nothing else is required.
 
+## Per-tool frontmatter overrides
+
+If a skill needs a field that only one tool understands (a Claude-only `model:`, a Codex-only `reasoning_effort:`), it's declared under a nested `overlays:` block rather than at the top level, so it doesn't leak into runtimes that don't expect it:
+
+```yaml
+overlays:
+  claude:
+    model: claude-sonnet-5
+```
+
+`./skills-cli export --tool claude --to ~/.claude/skills` merges that tool's overlay fields into the exported copy's top-level frontmatter. Export without `--tool` and the whole `overlays:` block is stripped from the copy — the repo's own SKILL.md keeps the full declaration either way. See [`SKILL-SPEC.md`](./SKILL-SPEC.md) for the format.
+
+## Detecting drift in an installed copy
+
+`./skills-cli drift --to ~/.claude/skills` compares an installed skill against this repo's current source and against the hash recorded at the last `export` to that path, and reports one of: in sync, locally edited (don't overwrite blindly), stale (repo moved on, re-export), or a real conflict (both sides changed — reconcile by hand).
+
 ## Companion tools some skills expect
 
 | Tool | Install | Used by |

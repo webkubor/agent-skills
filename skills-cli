@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""agent-skills CLI — 定向筛选 / 导出挂载 / 入库校验 / 交付台账
+"""agent-skills CLI — 定向筛选 / 导出挂载 / 入库校验 / 交付台账 / 漂移检测
 
 零依赖，单文件。仓库根目录执行：
 
@@ -10,15 +10,27 @@
   ./skills-cli export --platform xiaohongshu --to ~/.claude/skills
   ./skills-cli export --skills wuxia-cinematic,keyring --to ./out
   ./skills-cli export --category image-gen --zip xiaohongshu-pack.zip
+  ./skills-cli export --skills browser-verify --to .claude/skills,.codex/skills   # 一次导出多个目标
+  ./skills-cli export --skills browser-verify --to ~/.claude/skills --tool claude # 套用 claude 专属 overlay
 
   ./skills-cli check                         # 入库规范校验（SKILL-SPEC.md 的执行器）
+  ./skills-cli drift --to ~/.claude/skills   # 对比 已安装副本 vs 仓库源 vs 交付基线，抓漂移/冲突
   ./skills-cli log                           # 查看交付记录（delivery-log.jsonl）
 
 platform 取值: xiaohongshu | wechat | wechat-video | shared（shared=多平台通用）
 定向筛选时 shared 技能默认包含在任何平台结果里（--strict 关闭该行为）。
+
+Frontmatter 可选嵌套 overlays 块，声明按目标工具覆盖的字段（export --tool 时套用，
+其余情况下整段 overlays 会从导出副本里剥离，不污染消费方 frontmatter）：
+
+  overlays:
+    claude:
+      model: claude-sonnet-5
+    codex:
+      reasoning_effort: high
 """
 
-import argparse, datetime, getpass, json, os, re, shutil, socket, sys, zipfile
+import argparse, datetime, getpass, hashlib, json, os, re, shutil, socket, sys, tempfile, zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -51,6 +63,84 @@ def parse_frontmatter(path: Path) -> dict:
         elif line.strip():
             in_metadata = False
     return fm
+
+
+def parse_overlays(path: Path) -> dict:
+    """解析 frontmatter 里的 overlays: 嵌套块 → {tool: {key: value}}。"""
+    if not path.exists():
+        return {}
+    text = path.read_text(encoding='utf-8')
+    m = re.match(r'^---\n(.*?)\n---', text, re.S)
+    if not m:
+        return {}
+    overlays, cur_tool, in_overlays = {}, None, False
+    for line in m.group(1).splitlines():
+        if re.match(r'^overlays:\s*$', line):
+            in_overlays, cur_tool = True, None
+            continue
+        if not in_overlays:
+            continue
+        if not line.strip():
+            continue
+        tool_m = re.match(r'^  ([A-Za-z_][\w-]*):\s*$', line)
+        kv_m = re.match(r'^    ([A-Za-z_][\w-]*):\s*(.*)$', line)
+        if tool_m:
+            cur_tool = tool_m.group(1)
+            overlays[cur_tool] = {}
+        elif kv_m and cur_tool:
+            overlays[cur_tool][kv_m.group(1)] = kv_m.group(2).strip().strip('"')
+        elif not line.startswith('  '):
+            in_overlays, cur_tool = False, None
+    return overlays
+
+
+def strip_block(fm_lines: list, key: str) -> list:
+    out, skipping = [], False
+    for line in fm_lines:
+        if re.match(rf'^{re.escape(key)}:\s*$', line):
+            skipping = True
+            continue
+        if skipping:
+            if line.startswith('  ') or not line.strip():
+                continue
+            skipping = False
+        out.append(line)
+    return out
+
+
+def render_for_tool(skill_md: Path, overlay: dict, tool):
+    """从导出副本剥离 overlays 声明块；若指定 --tool 且该技能声明了对应 overlay，套用其字段覆盖。"""
+    text = skill_md.read_text(encoding='utf-8')
+    m = re.match(r'^---\n(.*?)\n---\n?(.*)$', text, re.S)
+    if not m:
+        return
+    fm_lines = strip_block(m.group(1).splitlines(), 'overlays')
+    for key, val in (overlay.get(tool) or {}).items():
+        pattern = re.compile(rf'^{re.escape(key)}:\s*.*$')
+        for i, line in enumerate(fm_lines):
+            if pattern.match(line):
+                fm_lines[i] = f'{key}: {val}'
+                break
+        else:
+            fm_lines.append(f'{key}: {val}')
+    skill_md.write_text('---\n' + '\n'.join(fm_lines) + '\n---\n' + m.group(2), encoding='utf-8')
+
+
+def hash_dir(path: Path) -> str:
+    h = hashlib.sha256()
+    for f in sorted(path.rglob('*')):
+        if f.is_file():
+            h.update(f.relative_to(path).as_posix().encode()); h.update(b'\0')
+            h.update(f.read_bytes()); h.update(b'\0')
+    return h.hexdigest()[:16]
+
+
+def ts_now() -> str:
+    return datetime.datetime.now().astimezone().isoformat(timespec='seconds')
+
+
+def whoami() -> str:
+    return f'{getpass.getuser()}@{socket.gethostname()}'
 
 
 def load_skills() -> list:
@@ -100,8 +190,13 @@ def cmd_export(args):
     rows = [s for s in load_skills() if matches(s, args)]
     if not rows:
         sys.exit('无匹配技能，未导出')
+    if not args.to and not args.zip:
+        sys.exit('export 需要 --to <目录>（可逗号分隔多个）或 --zip <文件>')
 
     names = [s['dir'] for s in rows]
+    filt = {k: v for k, v in (('platform', args.platform), ('category', args.category), ('skills', args.skills)) if v}
+    entries = []
+
     if args.zip:
         zpath = Path(args.zip).expanduser().resolve()
         with zipfile.ZipFile(zpath, 'w', zipfile.ZIP_DEFLATED) as z:
@@ -109,31 +204,34 @@ def cmd_export(args):
                 for f in sorted(s['path'].rglob('*')):
                     if f.is_file():
                         z.write(f, f.relative_to(SKILLS_DIR))
-        target = str(zpath)
-    elif args.to:
-        dest = Path(args.to).expanduser().resolve()
-        dest.mkdir(parents=True, exist_ok=True)
-        for s in rows:
-            shutil.copytree(s['path'], dest / s['dir'], dirs_exist_ok=True)
-        target = str(dest)
-    else:
-        sys.exit('export 需要 --to <目录> 或 --zip <文件>')
+        print(f"✅ 打包 {len(names)} 个技能 → {zpath}")
+        entries.append({'ts': ts_now(), 'action': 'export', 'skills': names, 'target': str(zpath), 'filter': filt, 'by': whoami()})
 
-    entry = {
-        'ts': datetime.datetime.now().astimezone().isoformat(timespec='seconds'),
-        'action': 'export',
-        'skills': names,
-        'target': target,
-        'filter': {k: v for k, v in (('platform', args.platform), ('category', args.category), ('skills', args.skills)) if v},
-        'by': f'{getpass.getuser()}@{socket.gethostname()}',
-    }
+    if args.to:
+        for target in (t.strip() for t in args.to.split(',') if t.strip()):
+            dest = Path(target).expanduser().resolve()
+            dest.mkdir(parents=True, exist_ok=True)
+            hashes = {}
+            for s in rows:
+                dest_skill = dest / s['dir']
+                shutil.copytree(s['path'], dest_skill, dirs_exist_ok=True)
+                skill_md = dest_skill / 'SKILL.md'
+                if skill_md.exists():
+                    render_for_tool(skill_md, parse_overlays(s['path'] / 'SKILL.md'), args.tool)
+                hashes[s['dir']] = hash_dir(dest_skill)
+            suffix = f'（tool={args.tool}）' if args.tool else ''
+            print(f"✅ 导出 {len(names)} 个技能 → {dest}{suffix}")
+            for n in names:
+                print('  ·', n)
+            entry = {'ts': ts_now(), 'action': 'export', 'skills': names, 'target': str(dest), 'filter': filt, 'by': whoami(), 'hashes': hashes}
+            if args.tool:
+                entry['tool'] = args.tool
+            entries.append(entry)
+
     if not args.no_log:
         with LOG_FILE.open('a', encoding='utf-8') as fp:
-            fp.write(json.dumps(entry, ensure_ascii=False) + '\n')
-    print(f"✅ 导出 {len(names)} 个技能 → {target}")
-    for n in names:
-        print('  ·', n)
-    if not args.no_log:
+            for e in entries:
+                fp.write(json.dumps(e, ensure_ascii=False) + '\n')
         print(f"📒 已记录交付台账 {LOG_FILE.name}")
 
 
@@ -172,6 +270,76 @@ def cmd_check(args):
     sys.exit(1 if fails else 0)
 
 
+def cmd_drift(args):
+    """对比 已安装副本 vs 仓库当前源 vs 上次交付基线，标出漂移/冲突。"""
+    if not args.to:
+        sys.exit('drift 需要 --to <目录>（可逗号分隔多个）')
+    targets = [t.strip() for t in args.to.split(',') if t.strip()]
+    all_skills = load_skills()
+    by_name = {s['dir']: s for s in all_skills}
+    want = {s['dir'] for s in all_skills if matches(s, args)} if (args.skills or args.platform or args.category) else None
+
+    log_entries = []
+    if LOG_FILE.exists():
+        for line in LOG_FILE.read_text(encoding='utf-8').splitlines():
+            if line.strip():
+                log_entries.append(json.loads(line))
+
+    any_conflict = False
+    for target in targets:
+        tpath = Path(target).expanduser().resolve()
+        names = set(want) if want is not None else set()
+        if want is None:
+            if tpath.exists():
+                names |= {d.name for d in tpath.iterdir() if d.is_dir() and d.name in by_name}
+            for e in log_entries:
+                if e.get('action') == 'export' and e.get('target') == str(tpath):
+                    names |= set(e.get('hashes', {}).keys())
+        if not names:
+            print(f'{target}: 无可比对技能（本地无目录、也无交付记录）')
+            continue
+
+        print(f'\n== {target} ==')
+        for name in sorted(names):
+            if name not in by_name:
+                print(f'  {name}: ⚠️  仓库中已不存在该技能')
+                continue
+
+            baseline, tool = None, None
+            for e in log_entries:
+                if e.get('action') == 'export' and e.get('target') == str(tpath):
+                    h = e.get('hashes', {}).get(name)
+                    if h:
+                        baseline, tool = h, e.get('tool')
+
+            installed_dir = tpath / name
+            installed_hash = hash_dir(installed_dir) if installed_dir.exists() else None
+
+            with tempfile.TemporaryDirectory() as td:
+                tmp_skill = Path(td) / name
+                shutil.copytree(by_name[name]['path'], tmp_skill)
+                skill_md = tmp_skill / 'SKILL.md'
+                if skill_md.exists():
+                    render_for_tool(skill_md, parse_overlays(by_name[name]['path'] / 'SKILL.md'), tool)
+                source_hash = hash_dir(tmp_skill)
+
+            if installed_hash is None:
+                print(f'  {name}: ⬜ 未安装到该目录')
+            elif baseline is None:
+                print(f'  {name}: ' + ('✅ 一致（无交付基线，按内容比对）' if installed_hash == source_hash else 'ℹ️  内容不同，且无交付基线，无法判断方向'))
+            elif installed_hash == baseline and source_hash == baseline:
+                print(f'  {name}: ✅ 一致')
+            elif installed_hash != baseline and source_hash == baseline:
+                print(f'  {name}: ⚠️  本地已改动（安装副本偏离仓库基线）')
+            elif installed_hash == baseline and source_hash != baseline:
+                print(f'  {name}: 🔄 仓库已更新，建议重新 export')
+            else:
+                print(f'  {name}: ❌ 冲突（本地和仓库都变了，需人工核对）')
+                any_conflict = True
+
+    sys.exit(1 if any_conflict else 0)
+
+
 def cmd_log(args):
     if not LOG_FILE.exists():
         print('暂无交付记录'); return
@@ -196,12 +364,17 @@ def main():
     p.add_argument('--json', action='store_true'); p.set_defaults(fn=cmd_list)
 
     p = sub.add_parser('export', help='定向导出到目录或 zip，并记录交付台账'); add_filters(p)
-    p.add_argument('--to', help='目标目录（如 ~/.claude/skills）')
+    p.add_argument('--to', help='目标目录，逗号分隔可一次导出多个（如 ~/.claude/skills,.codex/skills）')
     p.add_argument('--zip', help='打包为 zip 文件')
+    p.add_argument('--tool', help='目标 Agent 工具名（如 claude/codex/cursor），套用 frontmatter 里 overlays.<tool> 的覆盖字段；不传则只剥离 overlays 声明块')
     p.add_argument('--no-log', action='store_true', help='本次不写交付台账')
     p.set_defaults(fn=cmd_export)
 
     p = sub.add_parser('check', help='入库规范校验（SKILL-SPEC 执行器）'); p.set_defaults(fn=cmd_check)
+
+    p = sub.add_parser('drift', help='对比已安装副本 vs 仓库源 vs 交付基线，检测漂移/冲突'); add_filters(p)
+    p.add_argument('--to', help='已安装目录，逗号分隔可一次检查多个（必填）')
+    p.set_defaults(fn=cmd_drift)
 
     p = sub.add_parser('log', help='查看交付台账')
     p.add_argument('--tail', type=int, default=20); p.set_defaults(fn=cmd_log)

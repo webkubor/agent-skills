@@ -79,6 +79,20 @@ category: 古装               # 古装 | 现代
 | total_uses | 整数 | 累计使用次数 |
 | trace | 数组 | 每次使用的日期+用途+结果 |
 
+## 按工具覆盖的 frontmatter（可选）
+
+某个字段只对特定 Agent 工具有意义时（例如 Claude 专属的 `model:`），不要把它写进顶层 frontmatter——顶层字段会原样导出给所有工具。改用嵌套的 `overlays:` 块：
+
+```yaml
+overlays:
+  claude:
+    model: claude-sonnet-5
+  codex:
+    reasoning_effort: high
+```
+
+`skills-cli export --tool <name>` 会把对应工具的字段合并进导出副本的顶层 frontmatter；不传 `--tool` 时，整段 `overlays:` 会从导出副本中剥离，不会泄漏给不认识它的运行时。仓库里的原始 SKILL.md 始终保留完整声明。
+
 ## 分类体系
 
 | 分类 | 适用场景 |
