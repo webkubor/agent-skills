@@ -62,6 +62,12 @@ Each skill is a self-contained visual style. Pick one, copy its prompt keywords,
 | [**article-cover**](./skills/article-cover) | 公众号封面 — 金句海报 · 暗色高级感 |
 | [**article-illust**](./skills/article-illust) | 公众号文内配图 — 意境插图 · 金句集成 |
 
+### Content design skills
+
+| Skill | What it gives an agent |
+|---|---|
+| [**gzh-moyun**](./skills/gzh-moyun) | 公众号排版主题「墨韵」— 墨蓝+琥珀+米白底，AI 思考/创作复盘/深度随笔专用，苏梦城默认主题 |
+
 #### Female portrait routes（20 条人像路线）
 
 | Route | Style |
