@@ -61,6 +61,7 @@ Each skill is a self-contained visual style. Pick one, copy its prompt keywords,
 | [**chat-screenshot**](./skills/chat-screenshot) | 微信聊天截图 |
 | [**article-cover**](./skills/article-cover) | 公众号封面 — 金句海报 · 暗色高级感 |
 | [**article-illust**](./skills/article-illust) | 公众号文内配图 — 意境插图 · 金句集成 |
+| [**outfit-change-video**](./skills/outfit-change-video) | 穿搭换装视频 — 5套穿搭参考图 → Seedance 2.0 卡点换装（两步流） |
 
 ### Content design skills
 
