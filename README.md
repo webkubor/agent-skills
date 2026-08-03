@@ -35,7 +35,6 @@ Design principles:
 | [**agent-eyes**](./skills/agent-eyes) | Runtime vision for Vite apps: read structured API/error/console/interaction logs, screenshots and DOM snapshots — debug without guessing | [`vite-plugin-agent-eyes`](https://github.com/webkubor/vite-plugin-agent-eyes) |
 | [**browser-verify**](./skills/browser-verify) | Visual definition-of-done: drive Chrome via CDP, screenshot, read values, click, check light/dark/mobile | [`browser-harness`](https://www.npmjs.com/package/browser-harness) |
 | [**clone-website**](./skills/clone-website) | Reverse-engineer and rebuild websites, dispatching parallel builder agents in isolated worktrees | — |
-| [**project-maturity-audit**](./skills/project-maturity-audit) | 8-dimension evidence-based repo audit: scorecard + ROI-sorted fixes | — |
 | [**github-launch-kit**](./skills/github-launch-kit) | Turn a repository into an evidence-backed launch kit: positioning, real-demo plan, video script, README copy, and platform-specific posts | — |
 | [**git-worktrees**](./skills/git-worktrees) | Isolated-worktree development discipline: every task gets its own branch, auto-clean | — |
 | [**ts-prebuild-check**](./skills/ts-prebuild-check) | Diff-only pre-commit validation for TypeScript: typecheck + lint changed files only | — |
