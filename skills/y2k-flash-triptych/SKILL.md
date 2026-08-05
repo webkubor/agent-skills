@@ -5,6 +5,7 @@ platform: xiaohongshu
 type: style-base
 category: image-gen
 ratio: "9:16"
+genre: 人像写真
 description: 2000s 数码相机直闪质感三联拼图 — 同一人物三格不同角度，CCD复古颗粒，白色细分隔线
 engine: Token4AI (gpt-image-2)
 ---

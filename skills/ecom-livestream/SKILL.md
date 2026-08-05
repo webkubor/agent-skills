@@ -6,6 +6,7 @@ ratio: "3:4"
 type: style-base
 platform: shared
 category: image-gen
+genre: 电商
 ---
 
 # 直播间截图风格

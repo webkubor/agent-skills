@@ -6,6 +6,7 @@ ratio: "16:9"
 type: style-base
 platform: shared
 category: image-gen
+genre: 电商
 ---
 
 # 多品组合图

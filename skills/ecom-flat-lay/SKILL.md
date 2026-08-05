@@ -6,6 +6,7 @@ ratio: "1:1"
 type: style-base
 platform: shared
 category: image-gen
+genre: 电商
 ---
 
 # 平铺摆拍

@@ -6,6 +6,7 @@ ratio: "2:3"
 type: style-base
 platform: shared
 category: image-gen
+genre: 电商
 ---
 
 # 轻奢氛围大片
